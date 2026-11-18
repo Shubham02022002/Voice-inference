@@ -4,6 +4,27 @@
 >
 > **Goal:** Build and benchmark a production-minded streaming text-to-speech (TTS) serving system that reduces time-to-first-audio, improves concurrent throughput, and controls GPU cost without unacceptable speech-quality regressions.
 
+## Repository setup
+
+Clone the repository and copy the environment template for local development.
+
+```sh
+git clone https://github.com/dne-labs/forgeVoice.git
+cd forgeVoice
+cp .env.example .env
+```
+
+This milestone provides the repository setup and release workflow. The environment
+template documents proposed local ports for the gateway and worker. See the
+[project plan](VOICEFORGE_PROJECT_PLAN.md) for the implementation order.
+
+## CI and releases
+
+GitHub Actions runs the repository checks on pull requests and pushes to `main`.
+Pushing a `v*` tag runs the same checks and publishes a source archive and
+SHA-256 checksum to GitHub Releases. Releases package the tracked source files.
+No AWS resources are provisioned.
+
 ## 1. Why this project exists
 
 A basic TTS demo calls a model and returns a WAV file. **VoiceForge** investigates the harder systems problems around serving TTS to many simultaneous users: streaming, scheduling, batching, reusable conditioning, GPU memory limits, request cancellation, tail latency, and cost.

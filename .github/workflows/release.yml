@@ -1,0 +1,34 @@
+name: Publish source release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    uses: ./.github/workflows/check.yml
+
+  publish:
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package tagged source
+        run: |
+          git archive --format=tar.gz --prefix=forgeVoice/ -o forgeVoice.tar.gz HEAD
+          sha256sum forgeVoice.tar.gz > forgeVoice.tar.gz.sha256
+      - name: Publish release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" forgeVoice.tar.gz forgeVoice.tar.gz.sha256 --clobber
+          else
+            gh release create "$TAG" --verify-tag --generate-notes forgeVoice.tar.gz forgeVoice.tar.gz.sha256
+          fi
