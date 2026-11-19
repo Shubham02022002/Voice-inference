@@ -321,6 +321,7 @@ td:nth-child(2) { min-width: 140px; overflow-wrap: anywhere; }
   .overview-metrics:not(.benchmark-metrics) > div:nth-child(odd) { border: 0; padding-left: 0; }
 }
 @media (max-width: 480px) {
+  .benchmark-toolbar { flex-wrap: wrap; }
   .benchmark-metrics { grid-template-columns: 1fr; gap: 5px; }
   .benchmark-metrics > div { padding: 7px 0; border: 0; display: grid; grid-template-columns: 1fr auto; gap: 0 6px; }
   .benchmark-metrics > div + div { border-top: 1px solid var(--border-subtle); }

@@ -30,6 +30,7 @@ jobs:
         run: |
           python3 -m compileall -q services/inference/src experiments
           node --check apps/api/server.js
+          PYTHONPATH=services/inference/src python3 -m unittest discover -s services/inference/tests
       - uses: actions/setup-node@v4
         with:
           node-version: 22
