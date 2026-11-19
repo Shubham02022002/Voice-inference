@@ -1,169 +1,176 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import BenchmarkChart, { chartColors, ReportCard } from "./benchmark-charts";
 import { SectionHeading } from "./ui";
-import { spring } from "../lib/motion";
 
-type Run = { concurrency: number; successes: number; failures: number; p50_seconds: number | null; p95_seconds: number | null; audio_seconds_per_wall_second: number };
+type Trial = { status: number | null; elapsed_seconds: number; audio_seconds?: number; prompt_index: number };
+type Run = { concurrency: number; successes: number; failures: number; p50_seconds: number | null; p95_seconds: number | null; audio_seconds_per_wall_second: number; trials: Trial[] };
 type Metric = { name: string; unit: string; before: number; after: number; better: "lower" | "higher" };
-type Report = { setup: string; notes?: string; metrics: Metric[] };
-type Result = { id: string; status: string; data?: Run[] | Report };
-type Selection = { selected: number; onSelect: (value: number) => void };
+type PairRun = { first_ms: number; complete_ms: number; chunk_count?: number; audio_seconds: number };
+type Report = { setup: string; notes?: string; metrics: Metric[]; variants?: { wav: PairRun[]; stream: PairRun[] } };
+type Result = { id: string; data?: Run[] | Report; status?: "missing" | "error" };
 
-const phases = [
-  ["baseline", "CPU baseline", "Full-WAV responses from the first Kokoro worker.", "Request latency, success rate, and generated audio per second."],
-  ["streaming", "Streaming", "Start playback while later chunks are generated.", "Time to first playable audio, gaps between chunks, and total latency."],
-  ["queueing", "Queueing", "Test what happens when several listeners request speech at once.", "P95 latency, successful requests, rejection rate, and queue wait."],
-  ["batching", "Batching", "Test compatible requests together if the model supports batching.", "Throughput, P95 latency, and the time spent waiting for a batch."],
-  ["caching", "Conditioning cache", "Measure whether reusable voice conditioning saves work.", "Cache hit rate, warm latency, and memory cost."],
-  ["precision", "GPU precision", "Compare supported precision settings on the same GPU.", "Peak VRAM, latency, throughput, and listening quality."],
-  ["chunking", "Adaptive chunking", "Compare chunk sizes under different workloads.", "Time to first playable audio, playback gaps, and boundary quality."],
-  ["observability", "Reproducibility", "Capture repeated trials and the configuration used for each run.", "Trial variation, run configuration, and cost per audio minute."],
+const otherPhases = [
+  ["queueing", "Queueing", "P95 latency, rejection rate, and queue wait."],
+  ["batching", "Batching", "Throughput, P95 latency, and batch wait."],
+  ["caching", "Conditioning cache", "Cache hit rate, warm latency, and model memory."],
+  ["precision", "GPU precision", "Peak VRAM, latency, throughput, and listening quality."],
+  ["chunking", "Adaptive chunking", "Time to first playable payload and gaps between chunks."],
+  ["observability", "Reproducibility", "Variation across repeated trials and cost per audio minute."],
 ];
 
-const baselineMetrics = [
-  { name: "P50 full-response latency", unit: " s", value: (run: Run) => run.p50_seconds },
-  { name: "P95 full-response latency", unit: " s", value: (run: Run) => run.p95_seconds },
-  { name: "Successful requests", unit: "%", value: (run: Run) => 100 * run.successes / (run.successes + run.failures) },
-  { name: "Audio throughput", unit: " audio s/s", value: (run: Run) => run.audio_seconds_per_wall_second },
+const variants = [
+  { key: "wav", label: "Full WAV", color: chartColors.neutral },
+  { key: "stream", label: "Streaming", color: chartColors.accent },
 ];
+const number = (value: number) => new Intl.NumberFormat("en", { maximumFractionDigits: 2 }).format(value);
+const seconds = (ms: number) => `${number(ms / 1000)} s`;
 
-function Chart({ values, unit }: { values: [string, number | null][]; unit: string }) {
-  const max = Math.max(0, ...values.map(([, value]) => value ?? 0));
+function Metrics({ values }: { values: { label: string; value: string; detail: string }[] }) {
+  return <dl className="overview-metrics benchmark-metrics">
+    {values.map(({ label, value, detail }) => <div key={label}><dt>{label}</dt><dd>{value}</dd><small>{detail}</small></div>)}
+  </dl>;
+}
 
-  return (
-    <div className="chart">
-      {values.map(([label, value]) => (
-        <div key={label}>
-          <div className="bar-label">
-            <span>{label}</span>
-            <strong>{value == null ? "No data" : `${value.toFixed(2)}${unit}`}</strong>
-          </div>
-          <div className="track" aria-hidden="true">
-            <motion.span className="bar" initial={{ width: 0 }} animate={{ width: `${max ? ((value ?? 0) / max) * 100 : 0}%` }} transition={spring} />
-          </div>
-        </div>
-      ))}
+function DetailsTable({ title, headers, rows }: { title: string; headers: string[]; rows: (string | number)[][] }) {
+  return <details className="panel benchmark-details">
+    <summary>{title}</summary>
+    <div className="benchmark-table-scroll"><table>
+      <thead><tr>{headers.map((header) => <th key={header} scope="col">{header}</th>)}</tr></thead>
+      <tbody>{rows.map((row, index) => <tr key={index}>{row.map((cell, i) => <td key={i}>{cell}</td>)}</tr>)}</tbody>
+    </table></div>
+  </details>;
+}
+
+function Baseline({ runs }: { runs: Run[] }) {
+  const single = runs.find(({ concurrency }) => concurrency === 1);
+  const outcomes = runs.map((run) => ({ label: `Concurrency ${run.concurrency}`, successful: run.successes, failed: run.failures }));
+  const latencies = runs.map((run) => ({ label: `Concurrency ${run.concurrency}`, p50: run.p50_seconds, p95: run.p95_seconds }));
+  const throughput = runs.map((run) => ({ label: `Concurrency ${run.concurrency}`, audio: run.audio_seconds_per_wall_second }));
+  const trials = runs.flatMap((run) => run.trials.map((trial, index) => [
+    run.concurrency, index + 1, trial.prompt_index + 1, trial.status ?? "Client error", `${number(trial.elapsed_seconds)} s`,
+  ]));
+  return <>
+    {single && <Metrics values={[
+      { label: "Median response", value: single.p50_seconds === null ? "—" : `${number(single.p50_seconds)} s`, detail: "Concurrency 1" },
+      { label: "Successful requests", value: `${single.successes} / ${single.successes + single.failures}`, detail: "Concurrency 1" },
+      { label: "Audio throughput", value: `${number(single.audio_seconds_per_wall_second)}×`, detail: "Audio seconds per wall-clock second" },
+    ]} />}
+    <div className="benchmark-grid">
+      <BenchmarkChart title="Request outcomes" description="Successful and failed requests in each run." kind="stacked" data={outcomes}
+        series={[{ key: "successful", label: "Succeeded", color: chartColors.accent }, { key: "failed", label: "Failed", color: chartColors.rejected }]} />
+      <BenchmarkChart title="Response latency" description="Successful requests only. Concurrent latency is based on one result." data={latencies} unit=" s"
+        series={[{ key: "p50", label: "P50", color: chartColors.accent }, { key: "p95", label: "P95", color: chartColors.neutral }]} />
+      <BenchmarkChart title="Audio throughput" description="Seconds of generated audio per wall-clock second." data={throughput} unit="×"
+        series={[{ key: "audio", label: "Audio throughput", color: chartColors.accent }]} />
     </div>
-  );
+    <p className="benchmark-note">Shared CPU, Kokoro 0.9.4, voice af_heart. At concurrency 2, five of six requests returned HTTP 503. The percentiles describe this small smoke test.</p>
+    <DetailsTable title="View raw request results" headers={["Concurrency", "Request", "Prompt", "Status", "Elapsed"]} rows={trials} />
+  </>;
 }
 
-function MetricPicker({ metrics, selected, onSelect }: Selection & { metrics: { name: string }[] }) {
-  return (
-    <>
-      <label htmlFor="benchmark-metric">Metric</label>
-      <select id="benchmark-metric" className="field metric-control" value={selected} onChange={(event) => onSelect(Number(event.target.value))}>
-        {metrics.map(({ name }, index) => <option key={index} value={index}>{name}</option>)}
-      </select>
-    </>
-  );
+function Streaming({ report }: { report: Report }) {
+  const first = report.metrics.find((metric) => metric.name.includes("playable"));
+  const complete = report.metrics.find((metric) => metric.name.includes("complete"));
+  const paired = report.variants;
+  if (!first || !complete || !paired) return <Comparison report={report} />;
+
+  const summary = [
+    { label: "First payload", wav: first.before / 1000, stream: first.after / 1000 },
+    { label: "Complete", wav: complete.before / 1000, stream: complete.after / 1000 },
+  ];
+  const pairs = paired.wav.slice(0, paired.stream.length).map((wav, index) => ({ label: `Run ${index + 1}`, wav, stream: paired.stream[index] }));
+  const delta = first.before ? ` vs. ${seconds(first.before)} for full WAV` : "";
+  return <>
+    <Metrics values={[
+      { label: "First playable payload", value: seconds(first.after), detail: `Streaming${delta}` },
+      { label: "Complete response", value: seconds(complete.after), detail: `Streaming vs. ${seconds(complete.before)} for full WAV` },
+      { label: "Paired runs", value: String(pairs.length), detail: "Same prompt, voice, and CPU" },
+    ]} />
+    <div className="benchmark-grid">
+      <BenchmarkChart title="Median delivery time" description="Full WAV and streaming, compared at both milestones." data={summary} series={variants} unit=" s" />
+      <BenchmarkChart title="First playable payload by run" description="Elapsed time until the client receives a playable WAV or the first PCM chunk." kind="line" unit=" s" series={variants}
+        data={pairs.map(({ label, wav, stream }) => ({ label, wav: wav.first_ms / 1000, stream: stream.first_ms / 1000 }))} />
+      <BenchmarkChart title="Complete response by run" description="Time from request to receipt of the complete response." kind="line" unit=" s" series={variants}
+        data={pairs.map(({ label, wav, stream }) => ({ label, wav: wav.complete_ms / 1000, stream: stream.complete_ms / 1000 }))} />
+    </div>
+    <ReportNotes report={report} />
+    <DetailsTable title="View paired measurements" headers={["Run", "WAV first", "Stream first", "WAV complete", "Stream complete", "Chunks"]}
+      rows={pairs.map(({ label, wav, stream }) => [label, seconds(wav.first_ms), seconds(stream.first_ms), seconds(wav.complete_ms), seconds(stream.complete_ms), stream.chunk_count ?? "—"])} />
+  </>;
 }
 
-function Baseline({ runs, selected, onSelect }: Selection & { runs: Run[] }) {
-  const { value, unit } = baselineMetrics[selected];
-  const values = runs.map<[string, number | null]>((run) => [
-    `Concurrency ${run.concurrency} · ${run.successes}/${run.successes + run.failures} succeeded`, value(run),
-  ]);
-  return (
-    <>
-      <MetricPicker metrics={baselineMetrics} selected={selected} onSelect={onSelect} />
-      <Chart values={values} unit={unit} />
-      <p className="hint">Shared Linux CPU · Kokoro 0.9.4 · af_heart · mixed prompt lengths</p>
-      <p className="hint">The concurrent run rejected five of six requests. Its latency comes from the one successful request, so these runs describe load behavior and cannot establish a speedup.</p>
-    </>
-  );
+function ReportNotes({ report }: { report: Report }) {
+  return <div className="benchmark-note"><p>{report.setup}</p>{report.notes && <p>{report.notes}</p>}</div>;
 }
 
-function validComparison(report: Report) {
-  const valid = (value: number) => Number.isFinite(value) && value >= 0;
-  return typeof report?.setup === "string" && Array.isArray(report.metrics) && report.metrics.length > 0 &&
+function Comparison({ report }: { report: Report }) {
+  return <>
+    <div className="benchmark-grid">{report.metrics.map((metric) => <BenchmarkChart key={metric.name} title={metric.name} description={metric.better === "lower" ? "Lower is better." : "Higher is better."}
+      data={[{ label: "Before", value: metric.before }, { label: "After", value: metric.after }]} unit={metric.unit}
+      series={[{ key: "value", label: "Measured value", color: chartColors.accent }]} />)}</div>
+    <ReportNotes report={report} />
+  </>;
+}
+
+function hasReport(value: unknown): value is Report {
+  if (!value || typeof value !== "object") return false;
+  const report = value as Report;
+  return typeof report.setup === "string" && Array.isArray(report.metrics) && report.metrics.length > 0 &&
     report.metrics.every((metric) => typeof metric?.name === "string" && typeof metric.unit === "string" &&
-      valid(metric.before) && valid(metric.after) && ["lower", "higher"].includes(metric.better));
-}
-
-function Comparison({ report, selected, onSelect }: Selection & { report: Report }) {
-  const { before, after, unit, better } = report.metrics[selected];
-  const change = after - before;
-  const delta = before > 0 ? `${Math.abs(change / before * 100).toFixed(1)}%` : `${Math.abs(change).toFixed(2)}${unit}`;
-  const direction = change < 0 ? "lower" : "higher";
-  const interpretation = direction === better ? "improved" : "regressed";
-  return (
-    <>
-      <MetricPicker metrics={report.metrics} selected={selected} onSelect={onSelect} />
-      <Chart values={[["Before", before], ["After", after]]} unit={unit} />
-      <p className="hint">{change === 0 ? "No measured change." : `${delta} ${direction} after the change · ${interpretation}.`}</p>
-      <p className="hint">{report.setup}</p>
-      {typeof report.notes === "string" && <p className="hint">{report.notes}</p>}
-    </>
-  );
+      [metric.before, metric.after].every((number) => Number.isFinite(number) && number >= 0) && ["lower", "higher"].includes(metric.better));
 }
 
 export default function Benchmarks() {
-  const [phaseIndex, openPhase] = useState(0);
-  const [selected, selectMetric] = useState(0);
+  const [id, setId] = useState("streaming");
   const [report, setReport] = useState<Result | null>(null);
-  const [id, name, description, metrics] = phases[phaseIndex];
+  const [attempt, retry] = useState(0);
   const current = report?.id === id ? report : null;
+  const phase = otherPhases.find(([key]) => key === id);
 
   useEffect(() => {
     const controller = new AbortController();
-
     async function load() {
       try {
         const response = await fetch(`/v1/benchmarks/${id}`, { signal: controller.signal });
-        if (response.status === 404 && id !== "baseline") {
-          if (!controller.signal.aborted) setReport({ id, status: "Awaiting data" });
+        if (response.status === 404 && id !== "baseline" && id !== "streaming") {
+          if (!controller.signal.aborted) setReport({ id, status: "missing" });
           return;
         }
         if (!response.ok) throw new Error("Benchmark request failed");
         const data = await response.json();
-        if (id === "baseline" ? !Array.isArray(data) : !validComparison(data)) {
-          throw new Error("Invalid benchmark data");
-        }
-        if (!controller.signal.aborted) {
-          setReport({ id, data, status: id === "baseline" ? "CPU smoke test" : "Measured" });
-        }
+        if (id === "baseline" ? !Array.isArray(data) : !hasReport(data)) throw new Error("Invalid benchmark data");
+        if (!controller.signal.aborted) setReport({ id, data });
       } catch {
-        if (!controller.signal.aborted) setReport({ id, status: "Unavailable" });
+        if (!controller.signal.aborted) setReport({ id, status: "error" });
       }
     }
-
     load();
     return () => controller.abort();
-  }, [id]);
+  }, [id, attempt]);
 
-  return (
-    <section id="benchmarks" aria-label="Inference benchmarks">
-      <SectionHeading title="Inference benchmarks" description="Track latency, capacity, and resource use as VoiceForge changes." />
-      <div className="benchmark-layout">
-        <nav className="panel phase-nav" aria-label="Benchmark phases">
-          {phases.map(([phaseId, label], index) => (
-            <button key={phaseId} type="button" aria-current={id === phaseId ? "true" : undefined} onClick={() => {
-              if (index === phaseIndex) return;
-              setReport(null);
-              selectMetric(0);
-              openPhase(index);
-            }}>{label}</button>
-          ))}
-        </nav>
-        <article className="panel analysis" aria-labelledby="phase-title">
-          <div className="analysis-heading">
-            <div><h3 id="phase-title">{name}</h3><p>{description}</p></div>
-            <span className="badge" role="status">{current?.status ?? "Loading"}</span>
-          </div>
-          <div id="measurements">
-            {!current && <div className="skeleton" aria-label="Loading benchmark report" />}
-            {current?.data && (Array.isArray(current.data)
-              ? <Baseline runs={current.data} selected={selected} onSelect={selectMetric} />
-              : <Comparison report={current.data} selected={selected} onSelect={selectMetric} />)}
-            {current?.status === "Awaiting data" && (
-              <><p>No results published for this phase yet.</p><p className="hint">Measures: {metrics}</p></>
-            )}
-            {current?.status === "Unavailable" && <p>Benchmark results could not be loaded.</p>}
-          </div>
-        </article>
-      </div>
-    </section>
-  );
+  function select(next: string) {
+    if (next === id) return;
+    setReport(null);
+    setId(next);
+  }
+
+  return <section aria-label="Inference benchmarks" className="benchmark-page">
+    <SectionHeading title="Benchmarks" description="Recorded latency, throughput, and reliability measurements." />
+    <div className="benchmark-toolbar">
+      <nav aria-label="Benchmark reports" className="benchmark-tabs">
+        <button type="button" aria-pressed={id === "streaming"} onClick={() => select("streaming")}>Streaming</button>
+        <button type="button" aria-pressed={id === "baseline"} onClick={() => select("baseline")}>CPU baseline</button>
+      </nav>
+      <select className="field compact-field" aria-label="More benchmark phases" value={phase ? id : ""} onChange={(event) => select(event.target.value || "streaming")}>
+        <option value="">More phases</option>
+        {otherPhases.map(([key, label]) => <option value={key} key={key}>{label}</option>)}
+      </select>
+    </div>
+    {!current && <div className="skeleton" role="status" aria-label="Loading benchmark report" />}
+    {current?.status === "missing" && <ReportCard title={`${phase?.[1]} · Coming soon`} description={phase?.[2] ?? "No measurements have been published."}><p className="benchmark-note">No measured report is available for this phase yet.</p></ReportCard>}
+    {current?.status === "error" && <ReportCard title="Report unavailable" description="Check that the local Express gateway is running."><button type="button" className="button mt-3" onClick={() => { setReport(null); retry((value) => value + 1); }}>Retry</button></ReportCard>}
+    {current?.data && (Array.isArray(current.data) ? <Baseline runs={current.data} /> : id === "streaming" ? <Streaming report={current.data} /> : <Comparison report={current.data} />)}
+  </section>;
 }
