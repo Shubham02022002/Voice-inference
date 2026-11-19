@@ -222,6 +222,32 @@ and 668 ms with the managed warm cache. The small run showed no clear CPU
 latency gain. All seeded outputs matched byte for byte. CUDA transfer savings
 require a separate GPU run.
 
+### Run GPU precision in Colab
+
+Open the [Phase 6 notebook](https://colab.research.google.com/github/dne-labs/Voice-inference/blob/voiceforge-gpu-precision/experiments/05_precision/colab.ipynb),
+select a GPU runtime, and run all cells. The notebook primes model files first,
+then runs the same prompts and voice on the same GPU. It compares FP32 with
+FP16 autocast and tests BF16 only when PyTorch reports native support. A failed
+candidate is recorded with its error.
+
+The downloaded ZIP contains `precision.json`, matching WAV samples, and a
+whole-run `nvidia-smi` utilization log sampled once a second. Compare the WAV
+samples for pronunciation and timbre. The runner records duration changes,
+clipping, allocator peak memory, model load time, and first-PCM and synthesis
+latency. It accepts an optional `--usd-per-hour` to estimate compute cost per
+audio minute using a known hourly rate. Initial downloads and idle time are
+excluded from that estimate.
+
+A completed CUDA report can be placed at `experiments/dashboard/precision.json`
+for **Benchmarks → More phases → GPU precision**. CPU smoke results are kept
+outside the dashboard.
+
+The CUDA worker also accepts `--cuda-min-free-mib`. Before synthesis, it
+checks available device memory and returns HTTP 503 with `Retry-After: 1`
+below that threshold. The default is zero. Calibrate a positive threshold
+with measurements from the target GPU and workload. Free memory can change
+after the check.
+
 ### Use the benchmark dashboard
 
 Open **Benchmarks** to explore P50/P95 full-response latency, success rate,

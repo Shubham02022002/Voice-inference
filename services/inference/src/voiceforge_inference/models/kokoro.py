@@ -77,7 +77,7 @@ class KokoroAdapter(ModelAdapter):
                 _, _, audio = result
                 if audio is None or not audio.numel():
                     continue
-                samples = audio.cpu().numpy()
+                samples = audio.to(device="cpu", dtype=torch.float32).numpy()
                 pcm = (samples * 32768).round().clip(-32768, 32767).astype("<i2").tobytes()
             produced_audio = True
             yield pcm
