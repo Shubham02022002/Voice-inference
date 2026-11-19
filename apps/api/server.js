@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import express from "express";
@@ -42,6 +43,27 @@ app.post("/v1/speech", async (request, response) => {
   } catch {
     const status = timeout.aborted ? 504 : 502;
     return fail(request, response, status, status === 504 ? "Inference timed out." : "Inference worker is unavailable.");
+  }
+});
+
+const experiments = new URL("../../experiments/", import.meta.url);
+
+app.get("/v1/benchmarks/:phase", async (request, response) => {
+  const { phase } = request.params;
+  if (phase === "baseline") {
+    const reports = await Promise.all([1, 2].map(async (concurrency) => {
+      const path = new URL(`00_baseline/cpu-smoke-c${concurrency}.json`, experiments);
+      return JSON.parse(await readFile(path, "utf8"));
+    }));
+    return response.json(reports);
+  }
+  if (!/^[a-z]+$/.test(phase)) return fail(request, response, 404, "Benchmark phase not found.");
+  try {
+    const path = new URL(`dashboard/${phase}.json`, experiments);
+    return response.json(JSON.parse(await readFile(path, "utf8")));
+  } catch (error) {
+    if (error.code === "ENOENT") return fail(request, response, 404, "No measurements published.");
+    throw error;
   }
 });
 

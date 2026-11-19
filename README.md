@@ -78,6 +78,31 @@ synthesis at a time. Concurrent requests that arrive while it is busy get HTTP 5
 Both processes bind to loopback. To change ports, set `INFERENCE_PORT` for the
 worker and `PORT` and `INFERENCE_URL` as needed for the gateway.
 
+### Use the benchmark dashboard
+
+Open **Benchmarks** to explore P50/P95 full-response latency, success rate,
+and audio throughput for the recorded CPU runs. Latency percentiles only
+include successful requests. The dashboard shows sample counts and explains
+why the two concurrency runs cannot establish a speedup.
+
+Each subsequent optimization has a phase view. To publish a measured
+before/after comparison, add `experiments/dashboard/<phase>.json`.
+Use `streaming`, `queueing`, `batching`, `caching`, `precision`, `chunking`,
+or `observability` as the filename stem. Include the hardware, workload,
+model configuration, concurrency, and sample sizes in `setup`. Measure
+both variants under matching conditions and link raw results in the report
+directory for reproducibility. The schema is:
+
+```text
+setup: string
+notes: optional string
+metrics: list of { name: string, unit: string, before: number, after: number,
+                   better: "lower" | "higher" }
+```
+
+Use non-negative measured values. Phases without a report display their
+planned metrics and an awaiting-data status.
+
 ### Measure the local baseline
 
 With both processes running, run from the repository root:

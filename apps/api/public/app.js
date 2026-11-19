@@ -6,7 +6,15 @@ const status = document.querySelector("#status");
 const result = document.querySelector("#result");
 const player = result.querySelector("audio");
 const download = result.querySelector("a");
+const counter = document.querySelector("#character-count");
 let audioUrl;
+
+function updateCount() {
+  counter.textContent = `${text.value.length.toLocaleString()} / 2,000`;
+}
+
+text.addEventListener("input", updateCount);
+updateCount();
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
