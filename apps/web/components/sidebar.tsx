@@ -3,7 +3,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Dropdown from "@radix-ui/react-dropdown-menu";
 import { AnimatePresence, motion } from "framer-motion";
-import { AudioWaveform, ChevronsUpDown, PanelLeftClose, PanelLeftOpen, Settings, CreditCard, LogOut, X } from "lucide-react";
+import { AudioWaveform, ChevronsUpDown, PanelLeftClose, PanelLeftOpen, Settings, CreditCard, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navigation } from "../lib/data";
@@ -13,14 +13,14 @@ import { IconButton } from "./ui";
 
 function SidebarContent({ compact = false, mobile = false }: { compact?: boolean; mobile?: boolean }) {
   const path = usePathname();
-  const { collapsed, setCollapsed, notify, setModal } = useWorkspace();
+  const { collapsed, setCollapsed, setModal } = useWorkspace();
 
   return (
     <>
       <div className="sidebar-brand">
         <Link href="/" className="brand" onClick={() => setModal(null)} aria-label="VoiceForge dashboard">
           <span className="brand-icon"><AudioWaveform size={19} /></span>
-          {!compact && <span>VoiceForge<small>STUDIO</small></span>}
+          {!compact && <span>VoiceForge</span>}
         </Link>
         {mobile && <Dialog.Close asChild><IconButton label="Close navigation"><X size={18} /></IconButton></Dialog.Close>}
         {!mobile && !compact && <IconButton label="Collapse sidebar" onClick={() => setCollapsed(true)}><PanelLeftClose size={17} /></IconButton>}
@@ -30,24 +30,17 @@ function SidebarContent({ compact = false, mobile = false }: { compact?: boolean
         {["Workspace", "Manage"].map((group) => (
           <div key={group} className="nav-group">
             {!compact && <p>{group}</p>}
-            {navigation.filter((entry) => entry.group === group).map(({ path: href, label, icon: Icon }) => (
+            {navigation.filter((entry) => entry.group === group).map(({ path: href, label, icon: Icon, soon }) => (
               <Link key={href} href={href} aria-label={label} title={compact ? label : undefined} aria-current={path === href ? "page" : undefined} className="nav-link" onClick={() => setModal(null)}>
                 {path === href && <motion.span layoutId={mobile ? "mobileNavPill" : "activeNavPill"} className="nav-active" transition={spring} />}
                 <motion.span whileTap={{ rotate: -12, scale: 1.1 }} transition={spring}><Icon size={17} /></motion.span>
-                {!compact && <span>{label}</span>}
+                {!compact && <><span>{label}</span>{soon && <small className="nav-soon">Soon</small>}</>}
               </Link>
             ))}
           </div>
         ))}
       </nav>
       <div className="sidebar-footer">
-        {!compact && <div className="credit-box">
-          <div><span>Monthly credits</span><span className="pill">Demo</span></div>
-          <div className="credit-track" role="progressbar" aria-label="Demo monthly credits used" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
-            <motion.span initial={{ width: 0 }} animate={{ width: "25%" }} transition={{ duration: .8 }} />
-          </div>
-          <small>12,480 of 50,000 characters</small>
-        </div>}
         <Dropdown.Root>
           <Dropdown.Trigger className="profile-trigger" aria-label="Workspace menu">
             <span className="avatar profile-avatar">KC</span>
@@ -55,8 +48,7 @@ function SidebarContent({ compact = false, mobile = false }: { compact?: boolean
           </Dropdown.Trigger>
           <Dropdown.Portal><Dropdown.Content className="menu" side="top" align="start" sideOffset={8}>
             <Dropdown.Item asChild><Link href="/settings"><Settings size={16} /> Settings</Link></Dropdown.Item>
-            <Dropdown.Item onSelect={() => setModal("billing")}><CreditCard size={16} /> Billing</Dropdown.Item>
-            <Dropdown.Item onSelect={() => notify("Demo workspace", "This local demo has no signed-in account.")}><LogOut size={16} /> Log out</Dropdown.Item>
+            <Dropdown.Item onSelect={() => setModal("billing")}><CreditCard size={16} /> Billing <small className="nav-soon">Soon</small></Dropdown.Item>
           </Dropdown.Content></Dropdown.Portal>
         </Dropdown.Root>
       </div>

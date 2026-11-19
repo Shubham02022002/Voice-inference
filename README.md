@@ -81,10 +81,10 @@ npm run dev
 Use Node.js 22 or newer and open [http://127.0.0.1:3000](http://127.0.0.1:3000).
 Open **Text to Speech** to choose a voice and generate, play, or download
 a WAV. **Benchmarks** reads the recorded inference reports from the gateway.
-The dashboard usage statistics, cloning, transcription, dubbing, billing, and
-API keys use local demo data. Projects and preferences persist in browser storage,
-and generated clips are saved to browser IndexedDB. Voice previews and
-full generations use the selected Kokoro model voice.
+The overview reflects saved browser activity. Projects, favorites and preferences
+persist locally, and generated clips are saved to browser IndexedDB. Voice
+previews and full generations use Kokoro. Voice cloning, transcription, dubbing,
+billing, API key management, and advanced voice controls are marked Coming soon.
 The gateway accepts `POST /v1/speech` and forwards requests to the worker's
 `POST /synthesize`. The worker loads the model once and accepts one active
 synthesis at a time. Concurrent requests that arrive while it is busy get HTTP 503.
@@ -106,11 +106,11 @@ Shared motion variants are in `lib/motion.ts`, and workspace state is in
 | `app/page.tsx`, `app/[section]/page.tsx` | Dashboard and workspace routes |
 | `components/page-shell.tsx`, `sidebar.tsx`, `topbar.tsx` | Layout, navigation, theme and notifications |
 | `components/workspace-overlays.tsx` | Command palette, dialogs and toasts |
-| `components/dashboard-home.tsx`, `stat-card.tsx` | Overview, quick actions, and usage chart |
+| `components/dashboard-home.tsx` | Local overview and recent generations |
 | `components/speech-studio.tsx`, `generate-bar.tsx`, `voice-card.tsx` | Script editing, generation, and voice picker |
 | `components/audio-player-row.tsx`, `lib/audio-store.ts` | Playback, waveform, and local clip persistence |
-| `components/voice-library.tsx`, `records-table.tsx`, `upload-workflow.tsx`, `settings-page.tsx` | Demo workflows and settings |
-| `components/benchmarks.tsx` | Measured baseline and optimization reports |
+| `components/voice-library.tsx`, `records-table.tsx`, `settings-page.tsx` | Local voices, projects, history, and settings |
+| `components/benchmarks.tsx`, `benchmark-charts.tsx` | Measured baseline and optimization reports |
 
 ### Stream audio as it is generated
 

@@ -1,33 +1,13 @@
 "use client";
 
-import * as Accordion from "@radix-ui/react-accordion";
-import * as Slider from "@radix-ui/react-slider";
-import { motion } from "framer-motion";
-import { ChevronDown, SlidersHorizontal } from "lucide-react";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { playStream } from "../lib/stream-audio";
 import { saveClip } from "../lib/audio-store";
 import { voices } from "../lib/data";
-import { spring } from "../lib/motion";
 import { useWorkspace } from "../lib/workspace";
 import GenerateBar from "./generate-bar";
 import { SectionHeading } from "./ui";
 import VoiceCard from "./voice-card";
-
-function VoiceSlider({ name, initial }: { name: string; initial: number }) {
-  const [value, setValue] = useState(initial);
-  const [active, setActive] = useState(false);
-  return <div className="parameter">
-    <span>{name}</span>
-    <Slider.Root className="slider" value={[value]} onValueChange={([next]) => setValue(next)} onPointerDown={() => setActive(true)} onPointerUp={() => setActive(false)} onPointerCancel={() => setActive(false)}>
-      <Slider.Track className="slider-track"><Slider.Range className="slider-range" /></Slider.Track>
-      <Slider.Thumb className="slider-thumb" aria-label={name} onFocus={() => setActive(true)} onBlur={() => setActive(false)}>
-        <motion.span className="slider-value" animate={{ opacity: active ? 1 : 0, y: active ? 0 : 4 }} transition={spring}>{value}</motion.span>
-      </Slider.Thumb>
-    </Slider.Root>
-    <small>{value}</small>
-  </div>;
-}
 
 export default function SpeechStudio() {
   const [text, setText] = useState("Hello, welcome to VoiceForge.");
@@ -124,12 +104,7 @@ export default function SpeechStudio() {
           <div className="picker-grid">{voices.map((entry) => <VoiceCard key={entry.id} voice={entry} selected={entry.id === voice} onSelect={() => setVoice(entry.id)} compact />)}</div>
           <label htmlFor="playback" className="label">Playback</label>
           <select id="playback" className="field" value={mode} disabled={busy} onChange={(event) => setMode(event.target.value)}><option value="wav">Full WAV</option><option value="stream">Stream as generated</option></select>
-          <Accordion.Root type="single" collapsible className="settings-accordion">
-            <Accordion.Item value="voice-controls">
-              <Accordion.Header><Accordion.Trigger className="accordion-trigger"><SlidersHorizontal size={16} /> Voice controls <ChevronDown size={16} /></Accordion.Trigger></Accordion.Header>
-              <Accordion.Content className="accordion-content"><p>Demo controls. Kokoro uses its built-in voice settings.</p><VoiceSlider name="Stability" initial={60} /><VoiceSlider name="Similarity" initial={75} /><VoiceSlider name="Style" initial={25} /></Accordion.Content>
-            </Accordion.Item>
-          </Accordion.Root>
+          <p className="hint">Advanced voice controls · Coming soon</p>
         </aside>
       </div>
       <GenerateBar busy={busy} status={status} result={audioUrl} streaming={mode === "stream"} onStop={() => request.current?.abort()} />

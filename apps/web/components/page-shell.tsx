@@ -25,8 +25,8 @@ function Shell({ children }: { children: ReactNode }) {
         </main>
       </motion.div>
       <CommandPalette />
-      <Modal id="billing" title="Workspace plan" description="This local workspace uses demo credits and does not accept payments.">
-        <div className="billing-panel"><strong>Studio demo</strong><span>50,000 example characters per month</span></div>
+      <Modal id="billing" title="Billing is coming soon" description="Plans and payments are not available in the local workspace.">
+        {null}
       </Modal>
       <Toaster />
     </div>

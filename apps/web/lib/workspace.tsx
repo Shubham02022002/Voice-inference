@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { demoGenerations, demoProjects, type Generation, type Project } from "./data";
+import { demoGenerations, type Generation, type Project } from "./data";
 
 type Theme = "light" | "dark";
 type Toast = { id: string; title: string; detail?: string };
@@ -42,7 +42,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useStoredState("sidebar", false);
   const [favorites, setFavorites] = useStoredState<string[]>("favorites", []);
   const [names, setNames] = useStoredState<Record<string, string>>("voice-names", {});
-  const [projects, setProjects] = useStoredState("projects", demoProjects);
+  const [projects, setProjects] = useStoredState<Project[]>("projects", []);
   const [generations, setGenerations] = useStoredState("generations", demoGenerations);
   const [modal, setModal] = useState<string | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
