@@ -1,0 +1,65 @@
+{
+  "kind": "batching-feasibility",
+  "status": "unsupported",
+  "setup": "Kokoro 0.9.4, PyTorch 2.8.0+cpu, CPU, Linux x86_64, two Torch threads, af_heart.",
+  "notes": "Both prompts produced serial audio. Each two-row probe attempted one call to the upstream token-forward method. The equal-length probe duplicates one row to control for padding. The mixed-length probe uses separate text and conditioning rows with zero padding. These checks cover the installed backend without model changes.",
+  "serial": [
+    {
+      "prompt": "Ready to go.",
+      "token_count": 15,
+      "waveform_samples": 38400,
+      "forward_calls": 1
+    },
+    {
+      "prompt": "VoiceForge tests independent speech requests with different phoneme lengths.",
+      "token_count": 78,
+      "waveform_samples": 114600,
+      "forward_calls": 1
+    }
+  ],
+  "checks": [
+    {
+      "label": "Single-row token control",
+      "input_shape": [
+        1,
+        15
+      ],
+      "token_lengths": [
+        15
+      ],
+      "output_shape": [
+        38400
+      ],
+      "outcome": "output returned",
+      "forward_calls": 1
+    },
+    {
+      "label": "Two equal-length rows",
+      "input_shape": [
+        2,
+        15
+      ],
+      "token_lengths": [
+        15,
+        15
+      ],
+      "outcome": "failed",
+      "error": "RuntimeError: repeats must be 0-dim or 1-dim tensor",
+      "forward_calls": 1
+    },
+    {
+      "label": "Two independent prompts, padded",
+      "input_shape": [
+        2,
+        78
+      ],
+      "token_lengths": [
+        15,
+        78
+      ],
+      "outcome": "failed",
+      "error": "RuntimeError: repeats must be 0-dim or 1-dim tensor",
+      "forward_calls": 1
+    }
+  ]
+}
