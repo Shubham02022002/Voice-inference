@@ -26,3 +26,8 @@ jobs:
             exit 1
           fi
           git show --format= --check HEAD
+      - name: Check application syntax
+        run: |
+          python3 -m compileall -q services/inference/src experiments/00_baseline
+          node --check apps/api/server.js
+          node --check apps/api/public/app.js

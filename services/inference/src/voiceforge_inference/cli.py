@@ -2,7 +2,7 @@
 
 import argparse
 from pathlib import Path
-import wave
+from .audio import encode_wav
 
 
 
@@ -17,11 +17,7 @@ def main() -> None:
 
     try:
         result = KokoroAdapter(device=args.device).synthesize(args.text, args.voice)
-        with wave.open(str(args.output), "wb") as wav:
-            wav.setnchannels(1)
-            wav.setsampwidth(2)
-            wav.setframerate(result.sample_rate_hz)
-            wav.writeframes(result.pcm_s16le)
+        args.output.write_bytes(encode_wav(result))
     except (ValueError, RuntimeError, OSError) as error:
         parser.exit(1, f"Error: {error}\n")
 
