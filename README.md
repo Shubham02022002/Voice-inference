@@ -189,6 +189,39 @@ uv run --locked --python 3.12 \
   python ../../experiments/03_batching/run.py --output /tmp/voiceforge-batching.json
 ```
 
+### Cache voice conditioning
+
+The worker keeps reusable Kokoro voice packs on the model device in a
+least-recently-used cache with a 4 MiB tensor-data budget and a 10-minute TTL.
+Run the worker with `--conditioning-cache-bytes` or
+`--conditioning-cache-ttl` (seconds) to change those limits. A zero-byte
+budget reloads packs without retaining them. TTL runs from each load and
+cache entries are scoped to one loaded adapter. Restart the worker after
+changing model, language, device, or precision.
+
+View the worker counters locally with
+`curl -fsS http://127.0.0.1:8000/conditioning-cache`. Resident bytes cover
+retained pack data. In-flight holds and allocator overhead can add memory.
+
+Kokoro already caches voice packs in host memory. The benchmark compares that
+existing warm path with managed cold and warm modes using the same model and
+seed. Prime the model and the default `af_heart` voice first using the CPU
+synthesis command above. Then run:
+
+```sh
+cd services/inference
+HF_HUB_OFFLINE=1 uv run --locked --python 3.12 \
+  --index https://download.pytorch.org/whl/cpu \
+  --with 'torch==2.8.0+cpu' --with 'kokoro==0.9.4' \
+  python ../../experiments/04_conditioning_cache/run.py --output /tmp/voiceforge-caching.json
+```
+
+**Benchmarks → More phases → Conditioning cache** shows the CPU measurements.
+In eight CPU rounds, median first PCM was 667 ms with Kokoro's warm cache
+and 668 ms with the managed warm cache. The small run showed no clear CPU
+latency gain. All seeded outputs matched byte for byte. CUDA transfer savings
+require a separate GPU run.
+
 ### Use the benchmark dashboard
 
 Open **Benchmarks** to explore P50/P95 full-response latency, success rate,
