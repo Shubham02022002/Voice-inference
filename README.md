@@ -70,21 +70,57 @@ npm ci
 npm start
 ```
 
+Start the Next.js app in a third terminal from the repository root:
+
+```sh
+cd apps/web
+npm ci
+npm run dev
+```
+
 Use Node.js 22 or newer and open [http://127.0.0.1:3000](http://127.0.0.1:3000).
 Enter text, choose a voice, and generate, play, or download the WAV.
 The gateway accepts `POST /v1/speech` and forwards requests to the worker's
 `POST /synthesize`. The worker loads the model once and accepts one active
 synthesis at a time. Concurrent requests that arrive while it is busy get HTTP 503.
-Both processes bind to loopback. To change ports, set `INFERENCE_PORT` for the
-worker and `PORT` and `INFERENCE_URL` as needed for the gateway.
+The worker runs on port 8000, the gateway on 3001, and Next.js on 3000.
+All three bind to loopback. To use a different gateway address, set
+`VOICEFORGE_API_URL` before starting Next.js. If building for production, set
+it before `npm run build` as well. The gateway uses `INFERENCE_URL` to locate
+the worker.
+
+### Use the benchmark dashboard
+
+Open **Benchmarks** to explore P50/P95 full-response latency, success rate,
+and audio throughput for the recorded CPU runs. Latency percentiles only
+include successful requests. The dashboard shows sample counts and explains
+why the two concurrency runs cannot establish a speedup.
+
+Each subsequent optimization has a phase view. To publish a measured
+before/after comparison, add `experiments/dashboard/<phase>.json`.
+Use `streaming`, `queueing`, `batching`, `caching`, `precision`, `chunking`,
+or `observability` as the filename stem. Include the hardware, workload,
+model configuration, concurrency, and sample sizes in `setup`. Measure
+both variants under matching conditions and link raw results in the report
+directory for reproducibility. The schema is:
+
+```text
+setup: string
+notes: optional string
+metrics: list of { name: string, unit: string, before: number, after: number,
+                   better: "lower" | "higher" }
+```
+
+Use non-negative measured values. Phases without a report display their
+planned metrics and an awaiting-data status.
 
 ### Measure the local baseline
 
 With both processes running, run from the repository root:
 
 ```sh
-python experiments/00_baseline/run.py --concurrency 1 --output /tmp/voiceforge-c1.json
-python experiments/00_baseline/run.py --concurrency 2 --output /tmp/voiceforge-c2.json
+python experiments/00_baseline/run.py --url http://127.0.0.1:3001/v1/speech --concurrency 1 --output /tmp/voiceforge-c1.json
+python experiments/00_baseline/run.py --url http://127.0.0.1:3001/v1/speech --concurrency 2 --output /tmp/voiceforge-c2.json
 ```
 
 Reports include each request's total latency, generated audio duration, and

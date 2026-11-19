@@ -30,4 +30,11 @@ jobs:
         run: |
           python3 -m compileall -q services/inference/src experiments/00_baseline
           node --check apps/api/server.js
-          node --check apps/api/public/app.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build the Next.js frontend
+        working-directory: apps/web
+        run: |
+          npm ci
+          npm run build
