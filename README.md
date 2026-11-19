@@ -1,6 +1,6 @@
 # VoiceForge — Voice AI Inference Optimization Engine
 
-> **Status:** Planned. This is an engineering roadmap, not a claim that any optimization is already implemented.
+> **Status:** Kokoro WAV synthesis CLI. The worker, gateway, and optimization milestones are planned.
 >
 > **Goal:** Build and benchmark a production-minded streaming text-to-speech (TTS) serving system that reduces time-to-first-audio, improves concurrent throughput, and controls GPU cost without unacceptable speech-quality regressions.
 
@@ -15,18 +15,40 @@ cp .env.example .env
 ```
 
 The environment template documents local ports for the planned gateway and worker.
-The inference package uses Python 3.12 or newer and has no runtime dependencies yet.
-Set up its virtual environment with [uv](https://docs.astral.sh/uv/).
+## Generate a WAV with Kokoro
+
+These smoke-test commands target x86-64 Linux and Python 3.12. Install
+[uv](https://docs.astral.sh/uv/) and eSpeak NG (`sudo pacman -S --needed espeak-ng`
+on Arch or `sudo apt-get install -y espeak-ng` on Ubuntu).
+
+From the repository root, run this on your local machine:
 
 ```sh
 cd services/inference
-uv sync --locked
-uv run --locked python -c 'from voiceforge_inference.models.base import ModelAdapter, SynthesisResult'
+uv run --locked --python 3.12 \
+  --index https://download.pytorch.org/whl/cpu \
+  --with 'torch==2.8.0+cpu' --with 'kokoro==0.9.4' \
+  voiceforge-synthesize --device cpu
 ```
 
-The adapter contract accepts text and a voice ID and returns mono PCM audio with
-its sample rate. The first model and WAV smoke run are the next milestone. See
-the [project plan](VOICEFORGE_PROJECT_PLAN.md) for the implementation order.
+For an NVIDIA GPU in Colab, enable a GPU runtime, clone the repo, install uv
+and eSpeak NG, then run this from `services/inference` in a shell or
+`%%bash` notebook cell:
+
+```sh
+uv run --locked --python 3.12 \
+  --index https://download.pytorch.org/whl/cu126 \
+  --with 'torch==2.8.0+cu126' --with 'kokoro==0.9.4' \
+  voiceforge-synthesize --device cuda --output /content/output.wav
+```
+
+uv installs the pinned model runtime and matching PyTorch wheel for each command.
+The first run downloads the Python dependencies, Kokoro-82M weights, and voice
+preset. Both commands use the text “Hello, welcome to VoiceForge.” and the
+American English voice `af_heart`. Use `--text` and `--voice` to change them.
+The result is a mono, 24 kHz, signed 16-bit PCM WAV. CPU runs write
+`output.wav` by default. See the [project plan](VOICEFORGE_PROJECT_PLAN.md) for
+the worker and benchmarking milestones.
 
 ## CI and releases
 
