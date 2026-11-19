@@ -1,0 +1,84 @@
+{
+  "setup": "Shared Linux CPU (Intel Xeon Platinum 8573C), Kokoro 0.9.4, PyTorch 2.8.0 CPU, OMP_NUM_THREADS=2, concurrency 1, through Next.js and Express, 5 paired runs.",
+  "notes": "One warm-up per mode, alternating order. First audio timing stops when a complete PCM chunk or WAV reaches the HTTP client. It excludes browser decoding and device playback. Both modes used the same newline-delimited prompt. Raw trials include audio duration and streaming chunk counts. This experiment measures delivery latency and excludes listening quality.",
+  "prompt": "Hello, welcome to VoiceForge.\nThe first sentence can play while the next one is being generated.\nThis benchmark compares audio delivery with the same text, voice, and model.",
+  "voice_id": "af_heart",
+  "pairs": 5,
+  "variants": {
+    "wav": [
+      {
+        "first_ms": 4498.464055001023,
+        "complete_ms": 4498.464055001023,
+        "audio_seconds": 11.475
+      },
+      {
+        "first_ms": 4102.434438000273,
+        "complete_ms": 4102.434438000273,
+        "audio_seconds": 11.475
+      },
+      {
+        "first_ms": 4094.593738000185,
+        "complete_ms": 4094.593738000185,
+        "audio_seconds": 11.475
+      },
+      {
+        "first_ms": 5147.9153979998955,
+        "complete_ms": 5147.9153979998955,
+        "audio_seconds": 11.475
+      },
+      {
+        "first_ms": 3698.953564999101,
+        "complete_ms": 3698.953564999101,
+        "audio_seconds": 11.475
+      }
+    ],
+    "stream": [
+      {
+        "first_ms": 888.1469989992183,
+        "complete_ms": 4045.6647259998135,
+        "chunk_count": 3,
+        "audio_seconds": 11.475
+      },
+      {
+        "first_ms": 1182.228772999224,
+        "complete_ms": 5467.403620999903,
+        "chunk_count": 3,
+        "audio_seconds": 11.475
+      },
+      {
+        "first_ms": 833.8443630000256,
+        "complete_ms": 3865.031032999468,
+        "chunk_count": 3,
+        "audio_seconds": 11.475
+      },
+      {
+        "first_ms": 964.7254689989495,
+        "complete_ms": 4054.358142999263,
+        "chunk_count": 3,
+        "audio_seconds": 11.475
+      },
+      {
+        "first_ms": 1038.87558399947,
+        "complete_ms": 6175.040370999341,
+        "chunk_count": 3,
+        "audio_seconds": 11.475
+      }
+    ]
+  },
+  "metrics": [
+    {
+      "name": "P50 time to playable payload",
+      "unit": " ms",
+      "before": 4102.434438000273,
+      "after": 964.7254689989495,
+      "better": "lower"
+    },
+    {
+      "name": "P50 complete response",
+      "unit": " ms",
+      "before": 4102.434438000273,
+      "after": 4054.358142999263,
+      "better": "lower"
+    }
+  ]
+}

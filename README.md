@@ -89,6 +89,33 @@ All three bind to loopback. To use a different gateway address, set
 it before `npm run build` as well. The gateway uses `INFERENCE_URL` to locate
 the worker.
 
+### Stream audio as it is generated
+
+Choose **Stream as generated** in the speech studio to start playback as
+Kokoro finishes each segment. **Stop** cancels the browser request and playback.
+The worker checks for disconnects between segments, so an in-progress model
+call can still finish before the worker becomes available again.
+
+The streaming endpoint is `POST /v1/speech/stream`. It returns newline-delimited
+JSON with a `start` event (sample rate), base64 PCM `audio` events, and a `done`
+or `error` event. The browser schedules mono 16-bit PCM with Web Audio and
+builds a downloadable WAV after a successful stream.
+
+To repeat the paired streaming benchmark through the running Next.js app:
+
+```sh
+python experiments/01_streaming/run.py --pairs 5 \
+  --setup "Describe your hardware, runtime, and worker settings" \
+  --output /tmp/voiceforge-streaming.json
+```
+
+The report measures time to a complete playable payload and full response time.
+The first metric ends at HTTP delivery and excludes browser decoding, scheduling,
+and physical playback. Use the same hardware, workload, and voice for both modes.
+The runner uses a newline-delimited prompt so both delivery modes synthesize
+the same text segments. Raw trials include generated audio duration and
+streaming chunk counts.
+
 ### Use the benchmark dashboard
 
 Open **Benchmarks** to explore P50/P95 full-response latency, success rate,

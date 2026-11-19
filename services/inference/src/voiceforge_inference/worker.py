@@ -1,9 +1,13 @@
 """Local HTTP worker serving one Kokoro inference at a time."""
 
 import argparse
+from base64 import b64encode
+from contextlib import closing
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import os
+from select import select
+from socket import MSG_PEEK
 from threading import Lock
 
 from .audio import encode_wav
@@ -40,7 +44,7 @@ class InferenceHandler(BaseHTTPRequestHandler):
             self.error_json(404, "Route not found.")
 
     def do_POST(self) -> None:
-        if self.path != "/synthesize":
+        if self.path not in ("/synthesize", "/synthesize/stream"):
             self.error_json(404, "Route not found.")
             return
 
@@ -69,7 +73,12 @@ class InferenceHandler(BaseHTTPRequestHandler):
             return
 
         try:
+            if self.path == "/synthesize/stream":
+                self.stream_audio(text, voice)
+                return
             audio = encode_wav(self.server.adapter.synthesize(text, voice))
+        except (ConnectionError, TimeoutError):
+            return
         except ValueError as error:
             self.error_json(400, str(error))
             return
@@ -81,6 +90,38 @@ class InferenceHandler(BaseHTTPRequestHandler):
             self.server.slot.release()
 
         self.respond(200, "audio/wav", audio)
+
+    def stream_audio(self, text: str, voice: str) -> None:
+        def event(message: dict) -> None:
+            self.wfile.write((json.dumps(message) + "\n").encode())
+            self.wfile.flush()
+
+        adapter = self.server.adapter
+        with closing(adapter.iter_pcm(text, voice, sentence_chunks=True)) as chunks:
+            first = next(chunks)
+            self.connection.settimeout(10)
+            self.close_connection = True
+            self.send_response(200)
+            self.send_header("Content-Type", "application/x-ndjson")
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("Connection", "close")
+            self.end_headers()
+
+            try:
+                event({"type": "start", "sample_rate": adapter.sample_rate_hz})
+                pcm = first
+                while pcm is not None:
+                    event({"type": "audio", "pcm": b64encode(pcm).decode("ascii")})
+                    readable, _, _ = select([self.connection], [], [], 0)
+                    if readable and not self.connection.recv(1, MSG_PEEK):
+                        return
+                    pcm = next(chunks, None)
+                event({"type": "done"})
+            except (ConnectionError, TimeoutError):
+                return
+            except Exception as error:
+                self.log_error("Streaming synthesis failed: %s", error)
+                event({"type": "error", "error": "Audio synthesis failed."})
 
 
 def main() -> None:
