@@ -41,6 +41,7 @@ const otherPhases = [
   ["caching", "Conditioning cache", "Cache hit rate, warm latency, and model memory."],
   ["precision", "GPU precision", "Peak VRAM, latency, throughput, and listening quality."],
   ["chunking", "Adaptive chunking", "Time to first playable payload and gaps between chunks."],
+  ["chunkingload", "Chunking under load", "Compare paragraph and sentence streaming at 1, 2, and 4 concurrent requests."],
   ["observability", "Reproducibility", "Variation across repeated trials and cost per audio minute."],
 ];
 
@@ -184,10 +185,10 @@ function ReportNotes({ report }: { report: Report }) {
   return <div className="benchmark-note"><p>{report.setup}</p>{report.notes && <p>{report.notes}</p>}</div>;
 }
 
-function Comparison({ report }: { report: Report }) {
+function Comparison({ report, labels = ["Before", "After"] }: { report: Report; labels?: [string, string] }) {
   return <>
     <div className="benchmark-grid">{report.metrics.map((metric) => <BenchmarkChart key={metric.name} title={metric.name} description={metric.better === "lower" ? "Lower is better." : "Higher is better."}
-      data={[{ label: "Before", value: metric.before }, { label: "After", value: metric.after }]} unit={metric.unit}
+      data={[{ label: labels[0], value: metric.before }, { label: labels[1], value: metric.after }]} unit={metric.unit}
       series={[{ key: "value", label: "Measured value", color: chartColors.accent }]} />)}</div>
     <ReportNotes report={report} />
   </>;
@@ -308,6 +309,6 @@ export default function Benchmarks() {
       : id === "streaming" ? <Streaming report={current.data} />
       : id === "queueing" ? <Scheduling report={current.data} />
       : id === "caching" ? <Conditioning report={current.data} />
-      : <Comparison report={current.data} />)}
+      : <Comparison report={current.data} labels={id.startsWith("chunking") ? ["Paragraph", "Sentence"] : undefined} />)}
   </section>;
 }

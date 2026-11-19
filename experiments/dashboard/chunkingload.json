@@ -1,0 +1,659 @@
+{
+  "gpu": "Tesla T4",
+  "precision": "fp32",
+  "voice": "af_heart",
+  "prompt": "Welcome to VoiceForge. The appointment is at 10:45 on November 19. Please write down the reference number, 7462, before we continue. When you are ready, listen for the pause between these two sentences.",
+  "bursts": [
+    {
+      "concurrency": 1,
+      "round": 1,
+      "policy": "paragraph",
+      "requests": [
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 388.05550300003233,
+          "total_ms": 393.18890700002385,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        }
+      ],
+      "audio_seconds_per_second": 38.213183872959796
+    },
+    {
+      "concurrency": 1,
+      "round": 1,
+      "policy": "sentence",
+      "requests": [
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 112.04438600003641,
+          "total_ms": 564.8178239999879,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        }
+      ],
+      "audio_seconds_per_second": 27.531000863032844
+    },
+    {
+      "concurrency": 1,
+      "round": 2,
+      "policy": "sentence",
+      "requests": [
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 108.7618969999653,
+          "total_ms": 544.8881469999947,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        }
+      ],
+      "audio_seconds_per_second": 28.537967077489306
+    },
+    {
+      "concurrency": 1,
+      "round": 2,
+      "policy": "paragraph",
+      "requests": [
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 399.8138150000159,
+          "total_ms": 404.665504000036,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        }
+      ],
+      "audio_seconds_per_second": 37.12943122524885
+    },
+    {
+      "concurrency": 1,
+      "round": 3,
+      "policy": "paragraph",
+      "requests": [
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 385.46221100000366,
+          "total_ms": 390.37067600003184,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        }
+      ],
+      "audio_seconds_per_second": 38.489059050118755
+    },
+    {
+      "concurrency": 1,
+      "round": 3,
+      "policy": "sentence",
+      "requests": [
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 109.81562000000622,
+          "total_ms": 561.6339919999973,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        }
+      ],
+      "audio_seconds_per_second": 27.687070621608807
+    },
+    {
+      "concurrency": 1,
+      "round": 4,
+      "policy": "sentence",
+      "requests": [
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 106.88263999998071,
+          "total_ms": 549.4080720000056,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        }
+      ],
+      "audio_seconds_per_second": 28.303188090035636
+    },
+    {
+      "concurrency": 1,
+      "round": 4,
+      "policy": "paragraph",
+      "requests": [
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 395.40539099999705,
+          "total_ms": 399.91843400002836,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        }
+      ],
+      "audio_seconds_per_second": 37.570161119402
+    },
+    {
+      "concurrency": 2,
+      "round": 1,
+      "policy": "paragraph",
+      "requests": [
+        {
+          "queue_ms": 398.33,
+          "first_pcm_ms": 789.628639,
+          "total_ms": 794.1783239999722,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 395.72269400002824,
+          "total_ms": 400.72331100003566,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        }
+      ],
+      "audio_seconds_per_second": 37.82944851585444
+    },
+    {
+      "concurrency": 2,
+      "round": 1,
+      "policy": "sentence",
+      "requests": [
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 124.88979400001199,
+          "total_ms": 578.1414109999901,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 575.965,
+          "first_pcm_ms": 699.7554450000507,
+          "total_ms": 1170.1890920000437,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        }
+      ],
+      "audio_seconds_per_second": 26.576901299639562
+    },
+    {
+      "concurrency": 2,
+      "round": 2,
+      "policy": "sentence",
+      "requests": [
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 107.71275100000821,
+          "total_ms": 558.858669000017,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 557.093,
+          "first_pcm_ms": 670.1530670000011,
+          "total_ms": 1116.2694849999752,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        }
+      ],
+      "audio_seconds_per_second": 27.860655888126058
+    },
+    {
+      "concurrency": 2,
+      "round": 2,
+      "policy": "paragraph",
+      "requests": [
+        {
+          "queue_ms": 397.898,
+          "first_pcm_ms": 790.5068069999857,
+          "total_ms": 795.2375610000217,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 395.327964000046,
+          "total_ms": 400.16599200004066,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        }
+      ],
+      "audio_seconds_per_second": 37.77906385561522
+    },
+    {
+      "concurrency": 2,
+      "round": 3,
+      "policy": "paragraph",
+      "requests": [
+        {
+          "queue_ms": 409.95,
+          "first_pcm_ms": 845.7064670000136,
+          "total_ms": 854.232799999977,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 415.0376889999734,
+          "total_ms": 425.6785619999732,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        }
+      ],
+      "audio_seconds_per_second": 35.170258125269385
+    },
+    {
+      "concurrency": 2,
+      "round": 3,
+      "policy": "sentence",
+      "requests": [
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 133.12824899998077,
+          "total_ms": 667.7066299999979,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 662.755,
+          "first_pcm_ms": 802.170732000036,
+          "total_ms": 1329.8841460000403,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        }
+      ],
+      "audio_seconds_per_second": 23.385495716706632
+    },
+    {
+      "concurrency": 2,
+      "round": 4,
+      "policy": "sentence",
+      "requests": [
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 139.36091499999748,
+          "total_ms": 679.486570999984,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 672.444,
+          "first_pcm_ms": 810.7094039999652,
+          "total_ms": 1338.0654169999957,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        }
+      ],
+      "audio_seconds_per_second": 23.24251087045328
+    },
+    {
+      "concurrency": 2,
+      "round": 4,
+      "policy": "paragraph",
+      "requests": [
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 398.20000899999286,
+          "total_ms": 402.77390899996135,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 392.706,
+          "first_pcm_ms": 798.3291919999829,
+          "total_ms": 802.8349560000265,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        }
+      ],
+      "audio_seconds_per_second": 37.42985999229337
+    },
+    {
+      "concurrency": 4,
+      "round": 1,
+      "policy": "paragraph",
+      "requests": [
+        {
+          "queue_ms": 411.199,
+          "first_pcm_ms": 816.4812890000235,
+          "total_ms": 821.0049209999966,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 817.709,
+          "first_pcm_ms": 1222.7658350000183,
+          "total_ms": 1227.4994640000045,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 1217.116,
+          "first_pcm_ms": 1621.1413739999898,
+          "total_ms": 1626.6901690000282,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 417.3909170000343,
+          "total_ms": 422.0251000000417,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        }
+      ],
+      "audio_seconds_per_second": 36.934963270270735
+    },
+    {
+      "concurrency": 4,
+      "round": 1,
+      "policy": "sentence",
+      "requests": [
+        {
+          "queue_ms": 1122.916,
+          "first_pcm_ms": 1234.548053000026,
+          "total_ms": 1679.1450499999883,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 1671.48,
+          "first_pcm_ms": 1785.854984000025,
+          "total_ms": 2235.602921000009,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 568.014,
+          "first_pcm_ms": 681.523392000031,
+          "total_ms": 1126.6415030000303,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 112.36912599997595,
+          "total_ms": 576.3700839999615,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        }
+      ],
+      "audio_seconds_per_second": 27.816708822054313
+    },
+    {
+      "concurrency": 4,
+      "round": 2,
+      "policy": "sentence",
+      "requests": [
+        {
+          "queue_ms": 1667.603,
+          "first_pcm_ms": 1787.7978589999657,
+          "total_ms": 2229.464241999949,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 1098.251,
+          "first_pcm_ms": 1211.9234130000223,
+          "total_ms": 1674.9916310000117,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 113.7151949999975,
+          "total_ms": 557.9619389999948,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 551.099,
+          "first_pcm_ms": 663.9408259999868,
+          "total_ms": 1106.1814110000228,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        }
+      ],
+      "audio_seconds_per_second": 27.893327693990475
+    },
+    {
+      "concurrency": 4,
+      "round": 2,
+      "policy": "paragraph",
+      "requests": [
+        {
+          "queue_ms": 799.429,
+          "first_pcm_ms": 1216.9586809999942,
+          "total_ms": 1228.4164980000014,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 1222.379,
+          "first_pcm_ms": 1625.469536999958,
+          "total_ms": 1630.328335999991,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 397.143,
+          "first_pcm_ms": 807.4367789999997,
+          "total_ms": 812.0912379999936,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 402.2714449999967,
+          "total_ms": 407.06526799999665,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        }
+      ],
+      "audio_seconds_per_second": 36.85412942717059
+    },
+    {
+      "concurrency": 4,
+      "round": 3,
+      "policy": "paragraph",
+      "requests": [
+        {
+          "queue_ms": 811.573,
+          "first_pcm_ms": 1223.4110420000093,
+          "total_ms": 1228.1464280000023,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 1216.283,
+          "first_pcm_ms": 1633.4790100000305,
+          "total_ms": 1642.9061270000034,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 404.1630350000105,
+          "total_ms": 409.20992100001286,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 399.734,
+          "first_pcm_ms": 818.5491610000213,
+          "total_ms": 823.2143420000284,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        }
+      ],
+      "audio_seconds_per_second": 36.57021580953912
+    },
+    {
+      "concurrency": 4,
+      "round": 3,
+      "policy": "sentence",
+      "requests": [
+        {
+          "queue_ms": 2025.941,
+          "first_pcm_ms": 2162.8837060000023,
+          "total_ms": 2703.966309000009,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 1372.966,
+          "first_pcm_ms": 1509.9953280000022,
+          "total_ms": 2033.5372139999777,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 155.1850459999855,
+          "total_ms": 697.9349519999687,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 693.493,
+          "first_pcm_ms": 834.5410890000267,
+          "total_ms": 1380.882434,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        }
+      ],
+      "audio_seconds_per_second": 22.998985896322825
+    },
+    {
+      "concurrency": 4,
+      "round": 4,
+      "policy": "sentence",
+      "requests": [
+        {
+          "queue_ms": 1758.437,
+          "first_pcm_ms": 1873.1275430000096,
+          "total_ms": 2317.0140349999997,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 156.7304270000136,
+          "total_ms": 642.0344740000132,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 633.671,
+          "first_pcm_ms": 749.6090939999931,
+          "total_ms": 1202.652038999986,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        },
+        {
+          "queue_ms": 1198.6,
+          "first_pcm_ms": 1311.6858810000167,
+          "total_ms": 1765.7932280000068,
+          "max_playback_gap_ms": 0,
+          "chunks": 4
+        }
+      ],
+      "audio_seconds_per_second": 26.842676507475712
+    },
+    {
+      "concurrency": 4,
+      "round": 4,
+      "policy": "paragraph",
+      "requests": [
+        {
+          "queue_ms": 0.0,
+          "first_pcm_ms": 394.4914300000164,
+          "total_ms": 399.3862570000033,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 1222.739,
+          "first_pcm_ms": 1683.0293059999804,
+          "total_ms": 1692.8440179999598,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 803.968,
+          "first_pcm_ms": 1227.611115000002,
+          "total_ms": 1239.2106540000327,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        },
+        {
+          "queue_ms": 388.136,
+          "first_pcm_ms": 812.0577139999909,
+          "total_ms": 816.5751529999739,
+          "max_playback_gap_ms": 0,
+          "chunks": 1
+        }
+      ],
+      "audio_seconds_per_second": 35.49497412752783
+    }
+  ],
+  "setup": "Tesla T4 \u00b7 Kokoro FP32 \u00b7 af_heart \u00b7 four warmed bursts per policy and load level.",
+  "notes": "First PCM and queue wait are medians across requests. Throughput is the median across bursts. Playback gaps estimate buffer underruns after the first chunk arrives. One prompt, one FIFO worker, loopback HTTP.",
+  "metrics": [
+    {
+      "name": "Median first audio \u00b7 concurrency 1",
+      "unit": " ms",
+      "better": "lower",
+      "before": 391.7304470000147,
+      "after": 109.28875849998576
+    },
+    {
+      "name": "Median queue wait \u00b7 concurrency 1",
+      "unit": " ms",
+      "better": "lower",
+      "before": 0.0,
+      "after": 0.0
+    },
+    {
+      "name": "Median throughput \u00b7 concurrency 1",
+      "unit": " audio s/s",
+      "better": "higher",
+      "before": 37.8916724961809,
+      "after": 27.995129355822222
+    },
+    {
+      "name": "Median first audio \u00b7 concurrency 2",
+      "unit": " ms",
+      "better": "lower",
+      "before": 602.3331639999867,
+      "after": 404.7569909999993
+    },
+    {
+      "name": "Median queue wait \u00b7 concurrency 2",
+      "unit": " ms",
+      "better": "lower",
+      "before": 196.353,
+      "after": 278.5465
+    },
+    {
+      "name": "Median throughput \u00b7 concurrency 2",
+      "unit": " audio s/s",
+      "better": "higher",
+      "before": 37.6044619239543,
+      "after": 24.981198508173097
+    },
+    {
+      "name": "Median first audio \u00b7 concurrency 4",
+      "unit": " ms",
+      "better": "lower",
+      "before": 1017.7539210000077,
+      "after": 1023.2322510000245
+    },
+    {
+      "name": "Median queue wait \u00b7 concurrency 4",
+      "unit": " ms",
+      "better": "lower",
+      "before": 605.314,
+      "after": 895.8720000000001
+    },
+    {
+      "name": "Median throughput \u00b7 concurrency 4",
+      "unit": " audio s/s",
+      "better": "higher",
+      "before": 36.712172618354856,
+      "after": 27.329692664765012
+    }
+  ]
+}

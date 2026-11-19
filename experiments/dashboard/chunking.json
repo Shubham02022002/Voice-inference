@@ -1,0 +1,91 @@
+{
+  "prompt": "Welcome to VoiceForge. The appointment is at 10:45 on November 19. Please write down the reference number, 7462, before we continue. When you are ready, listen for the pause between these two sentences.",
+  "voice": "af_heart",
+  "device": "cuda",
+  "precision": "fp32",
+  "concurrency": 1,
+  "trials": [
+    {
+      "round": 1,
+      "policy": "paragraph",
+      "first_pcm_ms": 359.4704469999783,
+      "max_playback_gap_ms": 0,
+      "chunks": 1,
+      "audio_seconds_per_second": 41.789045527241186
+    },
+    {
+      "round": 1,
+      "policy": "sentence",
+      "first_pcm_ms": 94.7478929999761,
+      "max_playback_gap_ms": 0,
+      "chunks": 4,
+      "audio_seconds_per_second": 30.55971181283729
+    },
+    {
+      "round": 2,
+      "policy": "sentence",
+      "first_pcm_ms": 92.69195000001673,
+      "max_playback_gap_ms": 0,
+      "chunks": 4,
+      "audio_seconds_per_second": 29.100731606052616
+    },
+    {
+      "round": 2,
+      "policy": "paragraph",
+      "first_pcm_ms": 382.1330869999997,
+      "max_playback_gap_ms": 0,
+      "chunks": 1,
+      "audio_seconds_per_second": 39.30941389117184
+    },
+    {
+      "round": 3,
+      "policy": "paragraph",
+      "first_pcm_ms": 387.84483199998476,
+      "max_playback_gap_ms": 0,
+      "chunks": 1,
+      "audio_seconds_per_second": 38.729110764586004
+    },
+    {
+      "round": 3,
+      "policy": "sentence",
+      "first_pcm_ms": 111.38697100000172,
+      "max_playback_gap_ms": 0,
+      "chunks": 4,
+      "audio_seconds_per_second": 28.567249380988684
+    },
+    {
+      "round": 4,
+      "policy": "sentence",
+      "first_pcm_ms": 112.03689600000644,
+      "max_playback_gap_ms": 0,
+      "chunks": 4,
+      "audio_seconds_per_second": 28.34033670135252
+    },
+    {
+      "round": 4,
+      "policy": "paragraph",
+      "first_pcm_ms": 386.05305499999076,
+      "max_playback_gap_ms": 0,
+      "chunks": 1,
+      "audio_seconds_per_second": 38.90866530961984
+    }
+  ],
+  "setup": "Before = paragraph. After = sentence. Kokoro, af_heart, CUDA FP32, one request at a time. Four warmed rounds per policy on one prompt.",
+  "notes": "Sentence mode yielded four chunks and paragraph mode yielded one. Estimated inter-chunk playback stalls were zero in all trials. The estimate excludes HTTP and device playback. Listening quality and concurrent load remain untested.",
+  "metrics": [
+    {
+      "name": "Median time to first PCM",
+      "unit": " ms",
+      "better": "lower",
+      "before": 384.09307099999523,
+      "after": 103.06743199998891
+    },
+    {
+      "name": "Median audio throughput",
+      "unit": " audio s/s",
+      "better": "higher",
+      "before": 39.109039600395846,
+      "after": 28.833990493520652
+    }
+  ]
+}
