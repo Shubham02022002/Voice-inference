@@ -14,9 +14,19 @@ cd forgeVoice
 cp .env.example .env
 ```
 
-This milestone provides the repository setup and release workflow. The environment
-template documents proposed local ports for the gateway and worker. See the
-[project plan](VOICEFORGE_PROJECT_PLAN.md) for the implementation order.
+The environment template documents local ports for the planned gateway and worker.
+The inference package uses Python 3.12 or newer and has no runtime dependencies yet.
+Set up its virtual environment with [uv](https://docs.astral.sh/uv/).
+
+```sh
+cd services/inference
+uv sync --locked
+uv run --locked python -c 'from voiceforge_inference.models.base import ModelAdapter, SynthesisResult'
+```
+
+The adapter contract accepts text and a voice ID and returns mono PCM audio with
+its sample rate. The first model and WAV smoke run are the next milestone. See
+the [project plan](VOICEFORGE_PROJECT_PLAN.md) for the implementation order.
 
 ## CI and releases
 
