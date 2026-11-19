@@ -1,0 +1,568 @@
+{
+  "setup": "Shared Linux CPU, Intel Xeon Platinum 8573C. Kokoro on CPU, 2 Torch threads, af_heart. 4 bursts of five requests per policy, spaced 25 ms apart; one active inference.",
+  "notes": "Timings are from a local HTTP client calling the worker directly. Percentiles use successful requests only. The no-queue policy can admit a different mix of requests, so its latency cannot be compared directly with the queued policies. Policies ran in sequence on shared hardware. Model execution time varied across policies, and this small sample does not isolate scheduling effects from runtime variance.",
+  "metrics": [
+    {
+      "name": "P95 first playable payload, FIFO vs. shortest first",
+      "unit": " ms",
+      "before": 11397.44,
+      "after": 8164.78,
+      "better": "lower"
+    }
+  ],
+  "queue_limit": 4,
+  "queue_timeout_seconds": 15,
+  "oldest_request_priority_seconds": 2,
+  "prompts": {
+    "Anchor": "Welcome to our local speech experiment.",
+    "Long A": "A voice assistant has to handle short replies and longer passages. Comparing the same requests helps us see where time is spent.",
+    "Short A": "Your request is ready.",
+    "Long B": "This is a second long request in the same burst. When it completes, the worker can move on to the next piece of text.",
+    "Short B": "Thanks for waiting."
+  },
+  "policies": [
+    {
+      "id": "reject",
+      "label": "No queue",
+      "completed": 4,
+      "rejected": 16,
+      "expired": 0,
+      "failed": 0,
+      "first_p50_ms": 1540.97,
+      "first_p95_ms": 3390.23,
+      "first_p99_ms": 3390.23,
+      "queue_p95_ms": 0.0,
+      "inference_p50_ms": 1534.26,
+      "total_p95_ms": 3391.45,
+      "short_first_p50_ms": null,
+      "trials": [
+        {
+          "burst": 1,
+          "prompt": "Anchor",
+          "status": 200,
+          "queue_ms": 0.0,
+          "inference_ms": 2040.0,
+          "first_ms": 2062.4384190000455,
+          "total_ms": 2062.834464000048
+        },
+        {
+          "burst": 1,
+          "prompt": "Long A",
+          "status": 503,
+          "total_ms": 4.276477000075829
+        },
+        {
+          "burst": 1,
+          "prompt": "Short A",
+          "status": 503,
+          "total_ms": 1.935569000011128
+        },
+        {
+          "burst": 1,
+          "prompt": "Long B",
+          "status": 503,
+          "total_ms": 1.5678790000492882
+        },
+        {
+          "burst": 1,
+          "prompt": "Short B",
+          "status": 503,
+          "total_ms": 1.5022860000044602
+        },
+        {
+          "burst": 2,
+          "prompt": "Anchor",
+          "status": 200,
+          "queue_ms": 0.0,
+          "inference_ms": 3379.086,
+          "first_ms": 3390.232208000043,
+          "total_ms": 3391.451212999982
+        },
+        {
+          "burst": 2,
+          "prompt": "Long A",
+          "status": 503,
+          "total_ms": 1.5152619999980743
+        },
+        {
+          "burst": 2,
+          "prompt": "Short A",
+          "status": 503,
+          "total_ms": 2.4685719999979483
+        },
+        {
+          "burst": 2,
+          "prompt": "Long B",
+          "status": 503,
+          "total_ms": 2.1600630000193632
+        },
+        {
+          "burst": 2,
+          "prompt": "Short B",
+          "status": 503,
+          "total_ms": 12.826076999999714
+        },
+        {
+          "burst": 3,
+          "prompt": "Anchor",
+          "status": 200,
+          "queue_ms": 0.0,
+          "inference_ms": 1323.531,
+          "first_ms": 1332.096851000074,
+          "total_ms": 1333.2216680000784
+        },
+        {
+          "burst": 3,
+          "prompt": "Long A",
+          "status": 503,
+          "total_ms": 2.2523080000382834
+        },
+        {
+          "burst": 3,
+          "prompt": "Short A",
+          "status": 503,
+          "total_ms": 1.7663749999883294
+        },
+        {
+          "burst": 3,
+          "prompt": "Long B",
+          "status": 503,
+          "total_ms": 1.2375979999887932
+        },
+        {
+          "burst": 3,
+          "prompt": "Short B",
+          "status": 503,
+          "total_ms": 1.2923109999292137
+        },
+        {
+          "burst": 4,
+          "prompt": "Anchor",
+          "status": 200,
+          "queue_ms": 0.0,
+          "inference_ms": 1534.257,
+          "first_ms": 1540.9729909999896,
+          "total_ms": 1541.6617959999712
+        },
+        {
+          "burst": 4,
+          "prompt": "Long A",
+          "status": 503,
+          "total_ms": 2.8973870000754687
+        },
+        {
+          "burst": 4,
+          "prompt": "Short A",
+          "status": 503,
+          "total_ms": 1.8590429999676417
+        },
+        {
+          "burst": 4,
+          "prompt": "Long B",
+          "status": 503,
+          "total_ms": 1.4496300000246265
+        },
+        {
+          "burst": 4,
+          "prompt": "Short B",
+          "status": 503,
+          "total_ms": 3.0763949999936813
+        }
+      ]
+    },
+    {
+      "id": "fifo",
+      "label": "FIFO",
+      "completed": 20,
+      "rejected": 0,
+      "expired": 0,
+      "failed": 0,
+      "first_p50_ms": 5467.08,
+      "first_p95_ms": 11397.44,
+      "first_p99_ms": 13920.16,
+      "queue_p95_ms": 10266.96,
+      "inference_p50_ms": 1303.6,
+      "total_p95_ms": 12641.93,
+      "short_first_p50_ms": 9230.22,
+      "trials": [
+        {
+          "burst": 1,
+          "prompt": "Anchor",
+          "status": 200,
+          "queue_ms": 0.0,
+          "inference_ms": 1045.001,
+          "first_ms": 1052.879872999938,
+          "total_ms": 1053.3624820000114
+        },
+        {
+          "burst": 1,
+          "prompt": "Long A",
+          "status": 200,
+          "queue_ms": 1022.826,
+          "inference_ms": 5062.224,
+          "first_ms": 3886.1514409999245,
+          "total_ms": 6099.7990649999565
+        },
+        {
+          "burst": 1,
+          "prompt": "Short A",
+          "status": 200,
+          "queue_ms": 6065.886,
+          "inference_ms": 1684.266,
+          "first_ms": 7754.895992000002,
+          "total_ms": 7755.0813670000025
+        },
+        {
+          "burst": 1,
+          "prompt": "Long B",
+          "status": 200,
+          "queue_ms": 7728.807,
+          "inference_ms": 4905.168,
+          "first_ms": 10665.392971000074,
+          "total_ms": 12641.930075000004
+        },
+        {
+          "burst": 1,
+          "prompt": "Short B",
+          "status": 200,
+          "queue_ms": 12612.061,
+          "inference_ms": 1303.599,
+          "first_ms": 13920.156194000014,
+          "total_ms": 13921.358366999924
+        },
+        {
+          "burst": 2,
+          "prompt": "Anchor",
+          "status": 200,
+          "queue_ms": 0.0,
+          "inference_ms": 1038.965,
+          "first_ms": 1044.9422430000368,
+          "total_ms": 1045.6439980000596
+        },
+        {
+          "burst": 2,
+          "prompt": "Long A",
+          "status": 200,
+          "queue_ms": 1015.772,
+          "inference_ms": 3490.066,
+          "first_ms": 3131.1860350000416,
+          "total_ms": 4514.927351999972
+        },
+        {
+          "burst": 2,
+          "prompt": "Short A",
+          "status": 200,
+          "queue_ms": 4484.05,
+          "inference_ms": 921.762,
+          "first_ms": 5415.358437999998,
+          "total_ms": 5415.568086999997
+        },
+        {
+          "burst": 2,
+          "prompt": "Long B",
+          "status": 200,
+          "queue_ms": 5384.058,
+          "inference_ms": 4903.562,
+          "first_ms": 7621.199927000021,
+          "total_ms": 10293.019888000003
+        },
+        {
+          "burst": 2,
+          "prompt": "Short B",
+          "status": 200,
+          "queue_ms": 10266.963,
+          "inference_ms": 1127.743,
+          "first_ms": 11397.443777000035,
+          "total_ms": 11397.900912000068
+        },
+        {
+          "burst": 3,
+          "prompt": "Anchor",
+          "status": 200,
+          "queue_ms": 0.0,
+          "inference_ms": 1426.919,
+          "first_ms": 1437.0868129999508,
+          "total_ms": 1437.3650429999998
+        },
+        {
+          "burst": 3,
+          "prompt": "Long A",
+          "status": 200,
+          "queue_ms": 1405.03,
+          "inference_ms": 3472.457,
+          "first_ms": 3533.1279719999884,
+          "total_ms": 4884.584646999997
+        },
+        {
+          "burst": 3,
+          "prompt": "Short A",
+          "status": 200,
+          "queue_ms": 4857.545,
+          "inference_ms": 950.931,
+          "first_ms": 5812.912845000028,
+          "total_ms": 5813.099900999987
+        },
+        {
+          "burst": 3,
+          "prompt": "Long B",
+          "status": 200,
+          "queue_ms": 5785.83,
+          "inference_ms": 4027.588,
+          "first_ms": 7887.2733470000185,
+          "total_ms": 9822.08950000006
+        },
+        {
+          "burst": 3,
+          "prompt": "Short B",
+          "status": 200,
+          "queue_ms": 9790.573,
+          "inference_ms": 910.258,
+          "first_ms": 10705.542094000066,
+          "total_ms": 10706.080669000017
+        },
+        {
+          "burst": 4,
+          "prompt": "Anchor",
+          "status": 200,
+          "queue_ms": 0.0,
+          "inference_ms": 1092.51,
+          "first_ms": 1110.867141999961,
+          "total_ms": 1111.192734000042
+        },
+        {
+          "burst": 4,
+          "prompt": "Long A",
+          "status": 200,
+          "queue_ms": 1072.89,
+          "inference_ms": 3520.949,
+          "first_ms": 3191.1446069999556,
+          "total_ms": 4604.851606000011
+        },
+        {
+          "burst": 4,
+          "prompt": "Short A",
+          "status": 200,
+          "queue_ms": 4573.812,
+          "inference_ms": 888.665,
+          "first_ms": 5467.082442999981,
+          "total_ms": 5467.2675609999715
+        },
+        {
+          "burst": 4,
+          "prompt": "Long B",
+          "status": 200,
+          "queue_ms": 5438.994,
+          "inference_ms": 4704.372,
+          "first_ms": 8279.278791000024,
+          "total_ms": 10153.166405999968
+        },
+        {
+          "burst": 4,
+          "prompt": "Short B",
+          "status": 200,
+          "queue_ms": 10122.83,
+          "inference_ms": 805.748,
+          "first_ms": 10932.822510999926,
+          "total_ms": 10934.437522999928
+        }
+      ]
+    },
+    {
+      "id": "shortest",
+      "label": "Shortest first",
+      "completed": 20,
+      "rejected": 0,
+      "expired": 0,
+      "failed": 0,
+      "first_p50_ms": 2775.59,
+      "first_p95_ms": 8164.78,
+      "first_p99_ms": 8251.23,
+      "queue_p95_ms": 6752.62,
+      "inference_p50_ms": 999.02,
+      "total_p95_ms": 9851.3,
+      "short_first_p50_ms": 2313.48,
+      "trials": [
+        {
+          "burst": 1,
+          "prompt": "Anchor",
+          "status": 200,
+          "queue_ms": 0.0,
+          "inference_ms": 1085.265,
+          "first_ms": 1145.770858999981,
+          "total_ms": 1160.7140119999713
+        },
+        {
+          "burst": 1,
+          "prompt": "Long A",
+          "status": 200,
+          "queue_ms": 2893.379,
+          "inference_ms": 2956.121,
+          "first_ms": 4438.687694999999,
+          "total_ms": 5854.61310300002
+        },
+        {
+          "burst": 1,
+          "prompt": "Short A",
+          "status": 200,
+          "queue_ms": 1903.552,
+          "inference_ms": 963.197,
+          "first_ms": 2880.888767999977,
+          "total_ms": 2881.1234629999944
+        },
+        {
+          "burst": 1,
+          "prompt": "Long B",
+          "status": 200,
+          "queue_ms": 5799.049,
+          "inference_ms": 3636.545,
+          "first_ms": 7579.105303000006,
+          "total_ms": 9445.756621999975
+        },
+        {
+          "burst": 1,
+          "prompt": "Short B",
+          "status": 200,
+          "queue_ms": 988.703,
+          "inference_ms": 862.693,
+          "first_ms": 1857.7128809999977,
+          "total_ms": 1857.8382309999597
+        },
+        {
+          "burst": 2,
+          "prompt": "Anchor",
+          "status": 200,
+          "queue_ms": 0.0,
+          "inference_ms": 964.56,
+          "first_ms": 970.0319549999676,
+          "total_ms": 970.3664289999097
+        },
+        {
+          "burst": 2,
+          "prompt": "Long A",
+          "status": 200,
+          "queue_ms": 2798.422,
+          "inference_ms": 4087.328,
+          "first_ms": 5201.144713999952,
+          "total_ms": 6894.606655999951
+        },
+        {
+          "burst": 2,
+          "prompt": "Short A",
+          "status": 200,
+          "queue_ms": 1784.133,
+          "inference_ms": 986.6,
+          "first_ms": 2776.358160999962,
+          "total_ms": 2776.5592010000546
+        },
+        {
+          "burst": 2,
+          "prompt": "Long B",
+          "status": 200,
+          "queue_ms": 6836.969,
+          "inference_ms": 3259.11,
+          "first_ms": 8164.775034000058,
+          "total_ms": 10103.28684000001
+        },
+        {
+          "burst": 2,
+          "prompt": "Short B",
+          "status": 200,
+          "queue_ms": 858.9,
+          "inference_ms": 871.858,
+          "first_ms": 1736.5632360000518,
+          "total_ms": 1736.7824010000277
+        },
+        {
+          "burst": 3,
+          "prompt": "Anchor",
+          "status": 200,
+          "queue_ms": 0.0,
+          "inference_ms": 954.166,
+          "first_ms": 962.6887040000156,
+          "total_ms": 962.9779929999813
+        },
+        {
+          "burst": 3,
+          "prompt": "Long A",
+          "status": 200,
+          "queue_ms": 2801.266,
+          "inference_ms": 3998.238,
+          "first_ms": 5318.910863000042,
+          "total_ms": 6812.077383000087
+        },
+        {
+          "burst": 3,
+          "prompt": "Short A",
+          "status": 200,
+          "queue_ms": 1882.999,
+          "inference_ms": 888.079,
+          "first_ms": 2775.5901720000793,
+          "total_ms": 2776.130960000046
+        },
+        {
+          "burst": 3,
+          "prompt": "Long B",
+          "status": 200,
+          "queue_ms": 6752.622,
+          "inference_ms": 3090.561,
+          "first_ms": 8251.231386999962,
+          "total_ms": 9851.304101999973
+        },
+        {
+          "burst": 3,
+          "prompt": "Short B",
+          "status": 200,
+          "queue_ms": 855.827,
+          "inference_ms": 972.959,
+          "first_ms": 1832.5937429999613,
+          "total_ms": 1833.1742429999167
+        },
+        {
+          "burst": 4,
+          "prompt": "Anchor",
+          "status": 200,
+          "queue_ms": 0.0,
+          "inference_ms": 1076.94,
+          "first_ms": 1082.9828119999547,
+          "total_ms": 1083.272332999968
+        },
+        {
+          "burst": 4,
+          "prompt": "Long A",
+          "status": 200,
+          "queue_ms": 2791.883,
+          "inference_ms": 3367.175,
+          "first_ms": 4750.82235900004,
+          "total_ms": 6169.423779999988
+        },
+        {
+          "burst": 4,
+          "prompt": "Short A",
+          "status": 200,
+          "queue_ms": 1764.645,
+          "inference_ms": 999.025,
+          "first_ms": 2769.2531120000012,
+          "total_ms": 2769.643368000061
+        },
+        {
+          "burst": 4,
+          "prompt": "Long B",
+          "status": 200,
+          "queue_ms": 6113.477,
+          "inference_ms": 2772.624,
+          "first_ms": 7332.157074999941,
+          "total_ms": 8891.880307999942
+        },
+        {
+          "burst": 4,
+          "prompt": "Short B",
+          "status": 200,
+          "queue_ms": 978.145,
+          "inference_ms": 734.363,
+          "first_ms": 1717.6303139999618,
+          "total_ms": 1717.7658809999912
+        }
+      ]
+    }
+  ]
+}

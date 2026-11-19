@@ -41,6 +41,10 @@ app.post(["/v1/speech", "/v1/speech/stream"], async (request, response) => {
       body: JSON.stringify({ text, voice_id: voice }),
       signal: AbortSignal.any([timeout, disconnected.signal]),
     });
+    for (const header of ["Retry-After", "X-Queue-Wait-Ms", "X-Inference-Ms"]) {
+      const value = upstream.headers.get(header);
+      if (value !== null) response.set(header, value);
+    }
     if (!upstream.ok) {
       const details = await upstream.json().catch(() => ({}));
       return fail(request, response, upstream.status, details.error || "Inference worker failed.");

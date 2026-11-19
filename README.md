@@ -87,7 +87,9 @@ previews and full generations use Kokoro. Voice cloning, transcription, dubbing,
 billing, API key management, and advanced voice controls are marked Coming soon.
 The gateway accepts `POST /v1/speech` and forwards requests to the worker's
 `POST /synthesize`. The worker loads the model once and accepts one active
-synthesis at a time. Concurrent requests that arrive while it is busy get HTTP 503.
+synthesis at a time. A bounded FIFO queue accepts four additional requests by
+default. A full queue returns HTTP 503 with `Retry-After: 1`. Requests that
+wait longer than 15 seconds receive HTTP 504.
 The worker runs on port 8000, the gateway on 3001, and Next.js on 3000.
 All three bind to loopback. To use a different gateway address, set
 `VOICEFORGE_API_URL` before starting Next.js. If building for production, set
@@ -139,6 +141,34 @@ The runner uses a newline-delimited prompt so both delivery modes synthesize
 the same text segments. Raw trials include generated audio duration and
 streaming chunk counts.
 
+### Scheduling
+
+Set worker flags `--queue-limit`, `--queue-timeout`, and `--queue-policy` to
+change admission. `--queue-limit 0` reproduces immediate rejection of overlapping
+requests. The experimental `shortest` policy uses text length as its estimate
+and gives the oldest request priority after two seconds of waiting.
+The queue deadline applies before inference starts. Disconnects remove queued
+requests and stop streaming between model chunks. A running model call retains
+the inference slot until it yields or completes.
+
+The service sends `X-Queue-Wait-Ms` on successful responses. Full WAV includes
+`X-Inference-Ms`, and streaming includes `inference_ms` in the final event.
+The Express gateway applies a 60-second upstream deadline.
+
+To repeat the CPU scheduling benchmark, run from the repository root:
+
+```sh
+cd services/inference
+uv run --locked --python 3.12 \
+  --index https://download.pytorch.org/whl/cpu \
+  --with 'torch==2.8.0+cpu' --with 'kokoro==0.9.4' \
+  python ../../experiments/02_scheduling/run.py --output /tmp/voiceforge-queueing.json
+```
+
+The benchmark sends identical bursts of short and long requests to the HTTP
+worker under immediate rejection, FIFO, and shortest-first admission.
+**Benchmarks → Queueing** displays outcomes, tail latency, and queue wait.
+
 ### Use the benchmark dashboard
 
 Open **Benchmarks** to explore P50/P95 full-response latency, success rate,
@@ -166,7 +196,8 @@ planned metrics and an awaiting-data status.
 
 ### Measure the local baseline
 
-With both processes running, run from the repository root:
+Start the worker with `--queue-limit 0` to reproduce the original immediate-
+rejection baseline. With the worker and gateway running, run from the repo root:
 
 ```sh
 python experiments/00_baseline/run.py --url http://127.0.0.1:3001/v1/speech --concurrency 1 --output /tmp/voiceforge-c1.json
@@ -174,9 +205,8 @@ python experiments/00_baseline/run.py --url http://127.0.0.1:3001/v1/speech --co
 ```
 
 Reports include each request's total latency, generated audio duration, and
-status. The runner warms up the service before measuring. At higher concurrency,
-the failure count includes requests that reached the single-worker limit.
-These runs measure full WAV responses.
+status. The runner warms up the service before measuring. With no waiting slots,
+overlapping requests can return HTTP 503. These runs measure full WAV responses.
 
 ## CI and releases
 

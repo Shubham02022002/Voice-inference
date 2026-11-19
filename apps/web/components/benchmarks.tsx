@@ -8,11 +8,16 @@ type Trial = { status: number | null; elapsed_seconds: number; audio_seconds?: n
 type Run = { concurrency: number; successes: number; failures: number; p50_seconds: number | null; p95_seconds: number | null; audio_seconds_per_wall_second: number; trials: Trial[] };
 type Metric = { name: string; unit: string; before: number; after: number; better: "lower" | "higher" };
 type PairRun = { first_ms: number; complete_ms: number; chunk_count?: number; audio_seconds: number };
-type Report = { setup: string; notes?: string; metrics: Metric[]; variants?: { wav: PairRun[]; stream: PairRun[] } };
+type Policy = {
+  id: string; label: string; completed: number; rejected: number; expired: number; failed: number;
+  first_p50_ms: number | null; first_p95_ms: number | null; first_p99_ms: number | null;
+  queue_p95_ms: number | null; inference_p50_ms: number | null; total_p95_ms: number | null;
+  short_first_p50_ms: number | null;
+};
+type Report = { policies?: Policy[]; setup: string; notes?: string; metrics: Metric[]; variants?: { wav: PairRun[]; stream: PairRun[] } };
 type Result = { id: string; data?: Run[] | Report; status?: "missing" | "error" };
 
 const otherPhases = [
-  ["queueing", "Queueing", "P95 latency, rejection rate, and queue wait."],
   ["batching", "Batching", "Throughput, P95 latency, and batch wait."],
   ["caching", "Conditioning cache", "Cache hit rate, warm latency, and model memory."],
   ["precision", "GPU precision", "Peak VRAM, latency, throughput, and listening quality."],
@@ -101,6 +106,41 @@ function Streaming({ report }: { report: Report }) {
   </>;
 }
 
+function Scheduling({ report }: { report: Report }) {
+  const policies = report.policies;
+  if (!policies?.length) return <Comparison report={report} />;
+  const admitted = policies.filter(({ id }) => id !== "reject");
+  const toSeconds = (value: number | null) => value === null ? null : value / 1000;
+  const format = (value: number | null) => value === null ? "—" : seconds(value);
+  return <>
+    <div className="benchmark-grid mt-4">
+      <BenchmarkChart title="Request outcomes" description="The same burst workload under all three admission policies." kind="stacked"
+        data={policies.map(({ label, completed, rejected, expired, failed }) => ({ label, completed, rejected, expired: expired + failed }))}
+        series={[
+          { key: "completed", label: "Completed", color: chartColors.accent },
+          { key: "rejected", label: "Queue full", color: chartColors.rejected },
+          { key: "expired", label: "Expired or failed", color: chartColors.neutral },
+        ]} />
+      <BenchmarkChart title="Time to first playable payload" description="Successful requests under the two queue policies." unit=" s"
+        data={admitted.map((policy) => ({ label: policy.label, p50: toSeconds(policy.first_p50_ms), p95: toSeconds(policy.first_p95_ms), p99: toSeconds(policy.first_p99_ms) }))}
+        series={[
+          { key: "p50", label: "P50", color: chartColors.accent },
+          { key: "p95", label: "P95", color: chartColors.neutral },
+          { key: "p99", label: "P99", color: chartColors.rejected },
+        ]} />
+      <BenchmarkChart title="Short requests and queue wait" description="Short-request median first payload and overall P95 queue wait." unit=" s"
+        data={admitted.map((policy) => ({ label: policy.label, short: toSeconds(policy.short_first_p50_ms), waiting: toSeconds(policy.queue_p95_ms) }))}
+        series={[
+          { key: "short", label: "Short request P50", color: chartColors.accent },
+          { key: "waiting", label: "Queue wait P95", color: chartColors.neutral },
+        ]} />
+    </div>
+    <ReportNotes report={report} />
+    <DetailsTable title="View scheduling measurements" headers={["Policy", "Completed", "Queue wait P95", "Inference P50", "Total response P95"]}
+      rows={policies.map((policy) => [policy.label, policy.completed, format(policy.queue_p95_ms), format(policy.inference_p50_ms), format(policy.total_p95_ms)])} />
+  </>;
+}
+
 function ReportNotes({ report }: { report: Report }) {
   return <div className="benchmark-note"><p>{report.setup}</p>{report.notes && <p>{report.notes}</p>}</div>;
 }
@@ -134,7 +174,7 @@ export default function Benchmarks() {
     async function load() {
       try {
         const response = await fetch(`/v1/benchmarks/${id}`, { signal: controller.signal });
-        if (response.status === 404 && id !== "baseline" && id !== "streaming") {
+        if (response.status === 404 && id !== "baseline" && id !== "streaming" && id !== "queueing") {
           if (!controller.signal.aborted) setReport({ id, status: "missing" });
           return;
         }
@@ -162,6 +202,7 @@ export default function Benchmarks() {
       <nav aria-label="Benchmark reports" className="benchmark-tabs">
         <button type="button" aria-pressed={id === "streaming"} onClick={() => select("streaming")}>Streaming</button>
         <button type="button" aria-pressed={id === "baseline"} onClick={() => select("baseline")}>CPU baseline</button>
+        <button type="button" aria-pressed={id === "queueing"} onClick={() => select("queueing")}>Queueing</button>
       </nav>
       <select className="field compact-field" aria-label="More benchmark phases" value={phase ? id : ""} onChange={(event) => select(event.target.value || "streaming")}>
         <option value="">More phases</option>
@@ -171,6 +212,6 @@ export default function Benchmarks() {
     {!current && <div className="skeleton" role="status" aria-label="Loading benchmark report" />}
     {current?.status === "missing" && <ReportCard title={`${phase?.[1]} · Coming soon`} description={phase?.[2] ?? "No measurements have been published."}><p className="benchmark-note">No measured report is available for this phase yet.</p></ReportCard>}
     {current?.status === "error" && <ReportCard title="Report unavailable" description="Check that the local Express gateway is running."><button type="button" className="button mt-3" onClick={() => { setReport(null); retry((value) => value + 1); }}>Retry</button></ReportCard>}
-    {current?.data && (Array.isArray(current.data) ? <Baseline runs={current.data} /> : id === "streaming" ? <Streaming report={current.data} /> : <Comparison report={current.data} />)}
+    {current?.data && (Array.isArray(current.data) ? <Baseline runs={current.data} /> : id === "streaming" ? <Streaming report={current.data} /> : id === "queueing" ? <Scheduling report={current.data} /> : <Comparison report={current.data} />)}
   </section>;
 }
