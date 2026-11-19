@@ -169,6 +169,26 @@ The benchmark sends identical bursts of short and long requests to the HTTP
 worker under immediate rejection, FIFO, and shortest-first admission.
 **Benchmarks → Queueing** displays outcomes, tail latency, and queue wait.
 
+### Probe batching feasibility
+
+The batching experiment runs two prompts serially, then passes a single row,
+two equal-length rows, and two padded rows to Kokoro's token-forward method.
+The result is shown under **Benchmarks → More phases → Batching**.
+
+On Kokoro 0.9.4 with PyTorch 2.8.0 CPU, both prompts produced audio serially.
+The two-row calls, including the equal-length control, failed at duration
+alignment because the repeat counts must be scalar or one-dimensional.
+Batching is deferred for this backend. See the
+[recorded feasibility report](experiments/dashboard/batching.json).
+
+```sh
+cd services/inference
+uv run --locked --python 3.12 \
+  --index https://download.pytorch.org/whl/cpu \
+  --with 'torch==2.8.0+cpu' --with 'kokoro==0.9.4' \
+  python ../../experiments/03_batching/run.py --output /tmp/voiceforge-batching.json
+```
+
 ### Use the benchmark dashboard
 
 Open **Benchmarks** to explore P50/P95 full-response latency, success rate,

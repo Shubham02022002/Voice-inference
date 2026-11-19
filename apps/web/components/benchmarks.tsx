@@ -15,10 +15,18 @@ type Policy = {
   short_first_p50_ms: number | null;
 };
 type Report = { policies?: Policy[]; setup: string; notes?: string; metrics: Metric[]; variants?: { wav: PairRun[]; stream: PairRun[] } };
-type Result = { id: string; data?: Run[] | Report; status?: "missing" | "error" };
+type Feasibility = {
+  kind: "batching-feasibility";
+  status: "unsupported" | "needs-validation";
+  setup: string;
+  notes: string;
+  serial: { prompt: string; token_count: number; waveform_samples: number; forward_calls: number }[];
+  checks: { label: string; input_shape: number[]; forward_calls: number; outcome: string; error?: string }[];
+};
+type Result = { id: string; data?: Run[] | Report | Feasibility; status?: "missing" | "error" };
 
 const otherPhases = [
-  ["batching", "Batching", "Throughput, P95 latency, and batch wait."],
+  ["batching", "Batching", "Check whether one model forward can synthesize multiple requests."],
   ["caching", "Conditioning cache", "Cache hit rate, warm latency, and model memory."],
   ["precision", "GPU precision", "Peak VRAM, latency, throughput, and listening quality."],
   ["chunking", "Adaptive chunking", "Time to first playable payload and gaps between chunks."],
@@ -154,6 +162,28 @@ function Comparison({ report }: { report: Report }) {
   </>;
 }
 
+function Batching({ report }: { report: Feasibility }) {
+  const blocked = report.status === "unsupported";
+  return <>
+    <ReportCard title="Batching feasibility" description={blocked ? "The tested Kokoro backend failed both two-row probes." : "A multi-row output still needs audio and output-length validation."}>
+      <p className="benchmark-note">{report.setup}</p>
+      <p className="benchmark-note">{report.notes}</p>
+    </ReportCard>
+    <DetailsTable title="View serial controls" headers={["Prompt", "Tokens", "Audio samples", "Forward calls"]}
+      rows={report.serial.map((item) => [item.prompt, item.token_count, item.waveform_samples, item.forward_calls])} />
+    <DetailsTable title="View batch probes" headers={["Probe", "Input shape", "Forward calls", "Outcome"]}
+      rows={report.checks.map((check) => [check.label, check.input_shape.join(" × "), check.forward_calls, check.error ?? check.outcome])} />
+  </>;
+}
+
+function hasFeasibility(value: unknown): value is Feasibility {
+  if (!value || typeof value !== "object") return false;
+  const report = value as Feasibility;
+  return report.kind === "batching-feasibility" && ["unsupported", "needs-validation"].includes(report.status) &&
+    typeof report.setup === "string" && typeof report.notes === "string" && Array.isArray(report.serial) &&
+    Array.isArray(report.checks) && report.checks.every((check) => Array.isArray(check?.input_shape));
+}
+
 function hasReport(value: unknown): value is Report {
   if (!value || typeof value !== "object") return false;
   const report = value as Report;
@@ -180,7 +210,8 @@ export default function Benchmarks() {
         }
         if (!response.ok) throw new Error("Benchmark request failed");
         const data = await response.json();
-        if (id === "baseline" ? !Array.isArray(data) : !hasReport(data)) throw new Error("Invalid benchmark data");
+        const valid = id === "baseline" ? Array.isArray(data) : hasReport(data) || (id === "batching" && hasFeasibility(data));
+        if (!valid) throw new Error("Invalid benchmark data");
         if (!controller.signal.aborted) setReport({ id, data });
       } catch {
         if (!controller.signal.aborted) setReport({ id, status: "error" });
@@ -212,6 +243,10 @@ export default function Benchmarks() {
     {!current && <div className="skeleton" role="status" aria-label="Loading benchmark report" />}
     {current?.status === "missing" && <ReportCard title={`${phase?.[1]} · Coming soon`} description={phase?.[2] ?? "No measurements have been published."}><p className="benchmark-note">No measured report is available for this phase yet.</p></ReportCard>}
     {current?.status === "error" && <ReportCard title="Report unavailable" description="Check that the local Express gateway is running."><button type="button" className="button mt-3" onClick={() => { setReport(null); retry((value) => value + 1); }}>Retry</button></ReportCard>}
-    {current?.data && (Array.isArray(current.data) ? <Baseline runs={current.data} /> : id === "streaming" ? <Streaming report={current.data} /> : id === "queueing" ? <Scheduling report={current.data} /> : <Comparison report={current.data} />)}
+    {current?.data && (Array.isArray(current.data) ? <Baseline runs={current.data} />
+      : "kind" in current.data ? <Batching report={current.data} />
+      : id === "streaming" ? <Streaming report={current.data} />
+      : id === "queueing" ? <Scheduling report={current.data} />
+      : <Comparison report={current.data} />)}
   </section>;
 }
