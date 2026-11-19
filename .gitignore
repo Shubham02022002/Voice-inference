@@ -6,3 +6,5 @@
 __pycache__/
 
 /services/inference/output.wav
+
+node_modules/

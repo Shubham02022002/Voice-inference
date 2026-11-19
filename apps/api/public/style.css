@@ -1,0 +1,23 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  color: #f5efe6;
+  background: #141312;
+}
+* { box-sizing: border-box; }
+body { margin: 0; padding: clamp(1rem, 6vw, 5rem); }
+main { max-width: 42rem; margin: auto; }
+header { margin-bottom: 2rem; }
+h1 { margin: 0; font-size: clamp(2.4rem, 8vw, 4.5rem); letter-spacing: -.06em; }
+p { color: #c7beb2; }
+form, #result { background: #201e1b; padding: clamp(1rem, 4vw, 1.75rem); border: 1px solid #403a32; border-radius: 1rem; }
+label { display: block; margin-bottom: .5rem; font-weight: 600; }
+textarea, select, button { font: inherit; }
+textarea, select { color: inherit; background: #151413; border: 1px solid #62594d; border-radius: .55rem; padding: .75rem; }
+textarea { width: 100%; resize: vertical; }
+.controls { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: space-between; align-items: end; margin-top: 1rem; }
+button { color: #25170a; background: #ffb973; border: 0; border-radius: .55rem; padding: .8rem 1rem; font-weight: 700; cursor: pointer; }
+button:disabled { opacity: .6; cursor: wait; }
+#status { min-height: 1.5em; }
+audio { width: 100%; display: block; margin-bottom: .75rem; }
+a { color: #ffb973; }

@@ -1,6 +1,6 @@
 # VoiceForge — Voice AI Inference Optimization Engine
 
-> **Status:** Kokoro WAV synthesis CLI. The worker, gateway, and optimization milestones are planned.
+> **Status:** Local Kokoro inference, an Express gateway, and a browser demo.
 >
 > **Goal:** Build and benchmark a production-minded streaming text-to-speech (TTS) serving system that reduces time-to-first-audio, improves concurrent throughput, and controls GPU cost without unacceptable speech-quality regressions.
 
@@ -49,6 +49,48 @@ American English voice `af_heart`. Use `--text` and `--voice` to change them.
 The result is a mono, 24 kHz, signed 16-bit PCM WAV. CPU runs write
 `output.wav` by default. See the [project plan](VOICEFORGE_PROJECT_PLAN.md) for
 the worker and benchmarking milestones.
+
+## Run the local web app
+
+Start the Python worker in one terminal from the repository root:
+
+```sh
+cd services/inference
+uv run --locked --python 3.12 \
+  --index https://download.pytorch.org/whl/cpu \
+  --with 'torch==2.8.0+cpu' --with 'kokoro==0.9.4' \
+  voiceforge-worker --device cpu
+```
+
+Start the gateway in a second terminal from the repository root:
+
+```sh
+cd apps/api
+npm ci
+npm start
+```
+
+Use Node.js 22 or newer and open [http://127.0.0.1:3000](http://127.0.0.1:3000).
+Enter text, choose a voice, and generate, play, or download the WAV.
+The gateway accepts `POST /v1/speech` and forwards requests to the worker's
+`POST /synthesize`. The worker loads the model once and accepts one active
+synthesis at a time. Concurrent requests that arrive while it is busy get HTTP 503.
+Both processes bind to loopback. To change ports, set `INFERENCE_PORT` for the
+worker and `PORT` and `INFERENCE_URL` as needed for the gateway.
+
+### Measure the local baseline
+
+With both processes running, run from the repository root:
+
+```sh
+python experiments/00_baseline/run.py --concurrency 1 --output /tmp/voiceforge-c1.json
+python experiments/00_baseline/run.py --concurrency 2 --output /tmp/voiceforge-c2.json
+```
+
+Reports include each request's total latency, generated audio duration, and
+status. The runner warms up the service before measuring. At higher concurrency,
+the failure count includes requests that reached the single-worker limit.
+These runs measure full WAV responses.
 
 ## CI and releases
 
