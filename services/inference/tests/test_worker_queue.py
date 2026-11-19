@@ -78,6 +78,18 @@ class WorkerQueueTests(unittest.TestCase):
         self.assertGreaterEqual(float(headers["X-Inference-Ms"]), 0)
         self.assertTrue(body.startswith(b"RIFF"))
 
+    def test_low_vram_rejects_without_running_and_releases_slot(self):
+        self.adapter.unblock.set()
+        self.assertEqual(self.active.result(1)[0], 200)
+        self.server.memory_check = lambda: False
+        status, headers, body = self.synthesize("low memory")
+        self.assertEqual(status, 503)
+        self.assertEqual(headers["Retry-After"], "1")
+        self.assertIn("insufficient free memory", json.loads(body)["error"])
+        self.assertEqual(self.adapter.calls, ["active"])
+        self.server.memory_check = lambda: True
+        self.assertEqual(self.synthesize("recovered")[0], 200)
+
     def test_queued_request_expires_without_running(self):
         status, _, body = self.synthesize("expired")
         self.assertEqual(status, 504)

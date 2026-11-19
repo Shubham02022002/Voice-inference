@@ -25,7 +25,16 @@ type Feasibility = {
   serial: { prompt: string; token_count: number; waveform_samples: number; forward_calls: number }[];
   checks: { label: string; input_shape: number[]; forward_calls: number; outcome: string; error?: string }[];
 };
-type Result = { id: string; data?: Run[] | Report | Feasibility; status?: "missing" | "error" };
+type PrecisionRun = {
+  label: string; status: "measured" | "skipped" | "failed"; reason?: string;
+  p50_first_pcm_ms?: number; peak_allocated_mib?: number; peak_reserved_mib?: number;
+  audio_seconds_per_second?: number; estimated_cost_per_audio_minute?: number | null;
+};
+type PrecisionReport = Report & {
+  kind: "precision-benchmark"; device: "cuda"; gpu: string;
+  model_load_seconds: number; runs: PrecisionRun[];
+};
+type Result = { id: string; data?: Run[] | Report | Feasibility | PrecisionReport; status?: "missing" | "error" };
 
 const otherPhases = [
   ["batching", "Batching", "Check whether one model forward can synthesize multiple requests."],
@@ -184,6 +193,32 @@ function Comparison({ report }: { report: Report }) {
   </>;
 }
 
+function Precision({ report }: { report: PrecisionReport }) {
+  const format = (value: number | null | undefined, unit: string) => value == null ? "—" : `${number(value)}${unit}`;
+  return <>
+    <ReportCard title={report.gpu} description={`Model load: ${format(report.model_load_seconds, " s")}`}>
+      <p className="benchmark-note">WAV samples are required to assess pronunciation and timbre.</p>
+    </ReportCard>
+    <DetailsTable title="View precision run results" headers={["Mode", "Outcome", "P50 first PCM", "Peak allocated", "Peak reserved", "Audio / time", "Cost / audio min"]}
+      rows={report.runs.map((run) => [
+        run.label, run.reason ? `${run.status}: ${run.reason}` : run.status,
+        format(run.p50_first_pcm_ms, " ms"), format(run.peak_allocated_mib, " MiB"),
+        format(run.peak_reserved_mib, " MiB"), format(run.audio_seconds_per_second, "×"),
+        run.estimated_cost_per_audio_minute == null ? "—" : `$${run.estimated_cost_per_audio_minute.toFixed(6)}`,
+      ])} />
+    {report.metrics.length ? <Comparison report={report} /> : <ReportNotes report={report} />}
+  </>;
+}
+
+function hasPrecision(value: unknown): value is PrecisionReport {
+  if (!value || typeof value !== "object") return false;
+  const report = value as PrecisionReport;
+  return report.kind === "precision-benchmark" && report.device === "cuda" && typeof report.gpu === "string" &&
+    typeof report.setup === "string" && Number.isFinite(report.model_load_seconds) &&
+    Array.isArray(report.runs) && report.runs.some((run) => run?.status === "measured") &&
+    Array.isArray(report.metrics) && (!report.metrics.length || hasReport(report));
+}
+
 function Batching({ report }: { report: Feasibility }) {
   const blocked = report.status === "unsupported";
   return <>
@@ -232,7 +267,9 @@ export default function Benchmarks() {
         }
         if (!response.ok) throw new Error("Benchmark request failed");
         const data = await response.json();
-        const valid = id === "baseline" ? Array.isArray(data) : hasReport(data) || (id === "batching" && hasFeasibility(data));
+        const valid = id === "baseline" ? Array.isArray(data)
+          : id === "precision" ? hasPrecision(data)
+          : hasReport(data) || (id === "batching" && hasFeasibility(data));
         if (!valid) throw new Error("Invalid benchmark data");
         if (!controller.signal.aborted) setReport({ id, data });
       } catch {
@@ -266,7 +303,8 @@ export default function Benchmarks() {
     {current?.status === "missing" && <ReportCard title={`${phase?.[1]} · Coming soon`} description={phase?.[2] ?? "No measurements have been published."}><p className="benchmark-note">No measured report is available for this phase yet.</p></ReportCard>}
     {current?.status === "error" && <ReportCard title="Report unavailable" description="Check that the local Express gateway is running."><button type="button" className="button mt-3" onClick={() => { setReport(null); retry((value) => value + 1); }}>Retry</button></ReportCard>}
     {current?.data && (Array.isArray(current.data) ? <Baseline runs={current.data} />
-      : "kind" in current.data ? <Batching report={current.data} />
+      : "kind" in current.data && current.data.kind === "batching-feasibility" ? <Batching report={current.data} />
+      : "kind" in current.data && current.data.kind === "precision-benchmark" ? <Precision report={current.data} />
       : id === "streaming" ? <Streaming report={current.data} />
       : id === "queueing" ? <Scheduling report={current.data} />
       : id === "caching" ? <Conditioning report={current.data} />

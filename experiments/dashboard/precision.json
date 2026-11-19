@@ -1,0 +1,244 @@
+{
+  "kind": "precision-benchmark",
+  "setup": "Tesla T4, Kokoro 0.9.4, PyTorch 2.8.0+cu126, voice af_heart. 3 rounds per mode after warming all three prompts.",
+  "notes": "Autocast keeps model weights in FP32. First PCM is measured before HTTP, queueing, and playback. Peak allocations are PyTorch allocator measurements. Cost estimates cover measured inference time only. Pronunciation and timbre require listening to matched WAV files.",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "cuda_runtime": "12.6",
+  "gpu_total_mib": 14912.6875,
+  "model_load_seconds": 3.494455684000002,
+  "model_allocated_mib": 317.6396484375,
+  "free_after_model_load_mib": 14455.8125,
+  "usd_per_hour": null,
+  "workload": {
+    "short": "Welcome to VoiceForge. The proof is in the numbers.",
+    "numbers": "The appointment is at 10:45 on November 19. The reference number is 7462.",
+    "long": "Some listeners ask for quick answers. Others need a full explanation, with examples, pauses, and changes in emphasis."
+  },
+  "runs": [
+    {
+      "label": "BF16 autocast",
+      "status": "skipped",
+      "reason": "No native BF16 support."
+    },
+    {
+      "label": "FP32",
+      "status": "measured",
+      "p50_first_pcm_ms": 94.57161500000666,
+      "p50_total_ms": 226.97286299995767,
+      "audio_seconds_per_second": 30.043627968735183,
+      "peak_allocated_mib": 661.05126953125,
+      "peak_reserved_mib": 744.0,
+      "estimated_cost_per_audio_minute": null,
+      "trials": [
+        {
+          "first_pcm_ms": 99.21108200001072,
+          "total_ms": 191.90779399997382,
+          "audio_seconds": 4.025,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 638.42431640625,
+          "peak_reserved_mib": 730.0,
+          "prompt": "short"
+        },
+        {
+          "first_pcm_ms": 118.48068699998748,
+          "total_ms": 226.97286299995767,
+          "audio_seconds": 7.35,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 630.34130859375,
+          "peak_reserved_mib": 730.0,
+          "prompt": "numbers"
+        },
+        {
+          "first_pcm_ms": 88.46279300001925,
+          "total_ms": 241.21786400002065,
+          "audio_seconds": 8.325,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 659.525390625,
+          "peak_reserved_mib": 744.0,
+          "prompt": "long"
+        },
+        {
+          "first_pcm_ms": 93.11213499995574,
+          "total_ms": 185.59518600000047,
+          "audio_seconds": 4.025,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 638.88232421875,
+          "peak_reserved_mib": 744.0,
+          "prompt": "short"
+        },
+        {
+          "first_pcm_ms": 117.73604900002965,
+          "total_ms": 230.8017930000119,
+          "audio_seconds": 7.35,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 629.03662109375,
+          "peak_reserved_mib": 744.0,
+          "prompt": "numbers"
+        },
+        {
+          "first_pcm_ms": 88.75139200000604,
+          "total_ms": 240.2679709999802,
+          "audio_seconds": 8.325,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 661.05126953125,
+          "peak_reserved_mib": 744.0,
+          "prompt": "long"
+        },
+        {
+          "first_pcm_ms": 94.57161500000666,
+          "total_ms": 187.86051600000064,
+          "audio_seconds": 4.025,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 634.33056640625,
+          "peak_reserved_mib": 744.0,
+          "prompt": "short"
+        },
+        {
+          "first_pcm_ms": 115.82385999997769,
+          "total_ms": 221.32587099997636,
+          "audio_seconds": 7.35,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 629.57275390625,
+          "peak_reserved_mib": 744.0,
+          "prompt": "numbers"
+        },
+        {
+          "first_pcm_ms": 88.74383300002364,
+          "total_ms": 241.1893990000067,
+          "audio_seconds": 8.325,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 654.81103515625,
+          "peak_reserved_mib": 744.0,
+          "prompt": "long"
+        }
+      ],
+      "sample_duration_change_pct": {
+        "short": 0.0,
+        "numbers": 0.0,
+        "long": 0.0
+      }
+    },
+    {
+      "label": "FP16 autocast",
+      "status": "measured",
+      "p50_first_pcm_ms": 79.93164900000238,
+      "p50_total_ms": 181.9867599999725,
+      "audio_seconds_per_second": 37.60475433448783,
+      "peak_allocated_mib": 659.68505859375,
+      "peak_reserved_mib": 722.0,
+      "estimated_cost_per_audio_minute": null,
+      "trials": [
+        {
+          "first_pcm_ms": 79.16479100003926,
+          "total_ms": 153.56287700001303,
+          "audio_seconds": 4.05,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 609.619140625,
+          "peak_reserved_mib": 708.0,
+          "prompt": "short"
+        },
+        {
+          "first_pcm_ms": 97.44181799999296,
+          "total_ms": 181.9867599999725,
+          "audio_seconds": 7.35,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 635.9072265625,
+          "peak_reserved_mib": 708.0,
+          "prompt": "numbers"
+        },
+        {
+          "first_pcm_ms": 83.40539700003546,
+          "total_ms": 190.75593100001242,
+          "audio_seconds": 8.325,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 657.7353515625,
+          "peak_reserved_mib": 722.0,
+          "prompt": "long"
+        },
+        {
+          "first_pcm_ms": 77.10148000001027,
+          "total_ms": 154.25473699997383,
+          "audio_seconds": 4.05,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 610.22265625,
+          "peak_reserved_mib": 722.0,
+          "prompt": "short"
+        },
+        {
+          "first_pcm_ms": 97.84072900004048,
+          "total_ms": 195.9266560000401,
+          "audio_seconds": 7.35,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 637.2744140625,
+          "peak_reserved_mib": 722.0,
+          "prompt": "numbers"
+        },
+        {
+          "first_pcm_ms": 79.93164900000238,
+          "total_ms": 186.056466000025,
+          "audio_seconds": 8.325,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 659.68505859375,
+          "peak_reserved_mib": 722.0,
+          "prompt": "long"
+        },
+        {
+          "first_pcm_ms": 72.721166000008,
+          "total_ms": 147.2368970000275,
+          "audio_seconds": 4.05,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 613.859375,
+          "peak_reserved_mib": 722.0,
+          "prompt": "short"
+        },
+        {
+          "first_pcm_ms": 91.95692599996619,
+          "total_ms": 177.392895999958,
+          "audio_seconds": 7.35,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 636.57421875,
+          "peak_reserved_mib": 722.0,
+          "prompt": "numbers"
+        },
+        {
+          "first_pcm_ms": 78.48830400001816,
+          "total_ms": 186.4309970000022,
+          "audio_seconds": 8.325,
+          "clipped_samples": 0,
+          "peak_allocated_mib": 659.373046875,
+          "peak_reserved_mib": 722.0,
+          "prompt": "long"
+        }
+      ],
+      "sample_duration_change_pct": {
+        "short": 0.6211180124223503,
+        "numbers": 0.0,
+        "long": 0.0
+      }
+    }
+  ],
+  "metrics": [
+    {
+      "name": "FP16 autocast \u00b7 P50 first PCM",
+      "unit": " ms",
+      "before": 94.57161500000666,
+      "after": 79.93164900000238,
+      "better": "lower"
+    },
+    {
+      "name": "FP16 autocast \u00b7 Peak tensor allocation",
+      "unit": " MiB",
+      "before": 661.05126953125,
+      "after": 659.68505859375,
+      "better": "lower"
+    },
+    {
+      "name": "FP16 autocast \u00b7 Audio seconds per inference second",
+      "unit": "\u00d7",
+      "before": 30.043627968735183,
+      "after": 37.60475433448783,
+      "better": "higher"
+    }
+  ]
+}

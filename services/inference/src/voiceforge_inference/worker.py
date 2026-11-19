@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from base64 import b64encode
 from contextlib import closing
+from collections.abc import Callable
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import os
@@ -25,8 +26,12 @@ MAX_TEXT_LENGTH = 2_000
 
 
 class InferenceServer(ThreadingHTTPServer):
-    def __init__(self, port: int, adapter: KokoroAdapter, scheduler: Scheduler | None = None):
+    def __init__(
+        self, port: int, adapter: KokoroAdapter, scheduler: Scheduler | None = None, *,
+        memory_check: Callable[[], bool] | None = None,
+    ):
         self.adapter = adapter
+        self.memory_check = memory_check
         self.scheduler = scheduler if scheduler is not None else Scheduler()
         super().__init__(("127.0.0.1", port), InferenceHandler)
 
@@ -101,6 +106,10 @@ class InferenceHandler(BaseHTTPRequestHandler):
 
         started = perf_counter()
         try:
+            memory_check = self.server.memory_check
+            if memory_check is not None and not memory_check():
+                self.error_json(503, "The GPU has insufficient free memory. Try again shortly.", Retry_After="1")
+                return
             if self.path == "/synthesize/stream":
                 self.stream_audio(text, voice, queue_ms)
                 return
@@ -166,7 +175,10 @@ def main() -> None:
     parser.add_argument("--queue-policy", choices=("fifo", "shortest"), default="fifo")
     parser.add_argument("--conditioning-cache-bytes", type=int, default=DEFAULT_CACHE_BYTES)
     parser.add_argument("--conditioning-cache-ttl", type=float, default=DEFAULT_TTL_SECONDS)
+    parser.add_argument("--cuda-min-free-mib", type=int, default=0, help="reject GPU requests below this free VRAM floor")
     args = parser.parse_args()
+    if args.cuda_min_free_mib < 0 or (args.cuda_min_free_mib and args.device != "cuda"):
+        parser.error("--cuda-min-free-mib requires a nonnegative value and CUDA for a positive floor.")
     try:
         scheduler = Scheduler(args.queue_limit, args.queue_timeout, args.queue_policy)
     except ValueError as error:
@@ -181,7 +193,15 @@ def main() -> None:
     except ValueError as error:
         parser.error(str(error))
 
-    with InferenceServer(args.port, adapter, scheduler) as server:
+    memory_check = None
+    if args.cuda_min_free_mib:
+        import torch
+
+        def memory_check():
+            free, _ = torch.cuda.mem_get_info()
+            return free >= args.cuda_min_free_mib * 1024 * 1024
+
+    with InferenceServer(args.port, adapter, scheduler, memory_check=memory_check) as server:
         print(f"Inference worker ready on http://127.0.0.1:{server.server_port}", flush=True)
         try:
             server.serve_forever()
