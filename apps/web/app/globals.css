@@ -74,3 +74,5 @@ audio { width: min(100%, 25rem); }
   .settings { border-left: 0; border-top: 1px solid var(--line); }
   .phase-nav { display: flex; flex-wrap: wrap; }
 }
+.mode-label { margin-top: 1rem; }
+.stop-button { margin-top: .5rem; padding: .6rem; color: var(--accent); background: #fff; border: 1px solid var(--line); border-radius: .6rem; }

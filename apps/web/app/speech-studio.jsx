@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { playStream } from "./stream-audio";
 
 export default function SpeechStudio() {
   const [text, setText] = useState("Hello, welcome to VoiceForge.");
   const [voice, setVoice] = useState("af_heart");
+  const [mode, setMode] = useState("wav");
+  const request = useRef(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
   const [audioUrl, setAudioUrl] = useState("");
@@ -15,6 +18,8 @@ export default function SpeechStudio() {
     };
   }, [audioUrl]);
 
+  useEffect(() => () => request.current?.abort(), []);
+
   async function generate(event) {
     event.preventDefault();
     if (busy) return;
@@ -24,10 +29,22 @@ export default function SpeechStudio() {
       return;
     }
 
+    const controller = new AbortController();
+    request.current = controller;
+    const { signal } = controller;
+    const streaming = mode === "stream";
+    let context;
     setBusy(true);
     setStatus("Generating audio…");
     try {
-      const response = await fetch("/v1/speech", {
+      if (streaming) {
+        setAudioUrl("");
+        context = new AudioContext();
+        await context.resume();
+      }
+      signal.throwIfAborted();
+      const response = await fetch(streaming ? "/v1/speech/stream" : "/v1/speech", {
+        signal,
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text, voice_id: voice }),
@@ -36,11 +53,27 @@ export default function SpeechStudio() {
         const body = await response.json().catch(() => ({}));
         throw new Error(body.error || "Audio generation failed.");
       }
-      setAudioUrl(URL.createObjectURL(await response.blob()));
+      if (streaming) {
+        const { audio, playbackFinished } = await playStream(
+          response.body, context, signal, () => setStatus("Streaming audio…"),
+        );
+        signal.throwIfAborted();
+        setAudioUrl(URL.createObjectURL(audio));
+        setStatus("Finishing playback…");
+        await Promise.race([
+          playbackFinished,
+          new Promise((resolve) => signal.addEventListener("abort", resolve, { once: true })),
+        ]);
+      } else {
+        setAudioUrl(URL.createObjectURL(await response.blob()));
+      }
+      signal.throwIfAborted();
       setStatus("Audio ready.");
     } catch (error) {
-      setStatus(error.message);
+      setStatus(signal.aborted ? "Playback stopped." : error.message);
     } finally {
+      if (context) await context.close().catch(() => {});
+      request.current = null;
       setBusy(false);
     }
   }
@@ -64,14 +97,22 @@ export default function SpeechStudio() {
             <option value="af_bella">Bella</option>
             <option value="am_michael">Michael</option>
           </select>
+          <label className="mode-label" htmlFor="mode">Playback</label>
+          <select id="mode" disabled={busy} value={mode} onChange={(event) => setMode(event.target.value)}>
+            <option value="wav">Full WAV</option>
+            <option value="stream">Stream as generated</option>
+          </select>
           <dl className="format"><dt>Output</dt><dd>WAV · 24 kHz · Mono</dd></dl>
           <button type="submit" disabled={busy}>Generate audio <span aria-hidden="true">→</span></button>
+          {busy && mode === "stream" && (
+            <button type="button" className="stop-button" onClick={() => request.current?.abort()}>Stop</button>
+          )}
         </div>
       </form>
       <p id="status" role="status">{status}</p>
       {audioUrl && (
         <section className="panel result" aria-label="Generated audio">
-          <audio src={audioUrl} controls preload="metadata" aria-label="Generated speech" />
+          <audio key={audioUrl} src={audioUrl} controls preload="metadata" aria-label="Generated speech" />
           <a href={audioUrl} download="voiceforge.wav">Download WAV</a>
         </section>
       )}
