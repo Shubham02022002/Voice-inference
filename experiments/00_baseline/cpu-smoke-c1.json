@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:3000/v1/speech",
+  "concurrency": 1,
+  "voice_id": "af_heart",
+  "prompts": [
+    "Hello, welcome to VoiceForge.",
+    "VoiceForge generates speech from text. The baseline measures how long each request takes and how much audio it produces.",
+    "A speech service must handle repeated requests and longer passages. This experiment keeps the model and voice fixed, then varies the input length and number of concurrent clients to measure how response time changes."
+  ],
+  "successes": 3,
+  "failures": 0,
+  "p50_seconds": 2.776523250000537,
+  "p95_seconds": 5.946571137999854,
+  "wall_seconds": 9.612802517000091,
+  "audio_seconds_per_wall_second": 2.4706634675994326,
+  "trials": [
+    {
+      "status": 200,
+      "elapsed_seconds": 0.8873491499998636,
+      "audio_seconds": 2.3,
+      "prompt_index": 0
+    },
+    {
+      "status": 200,
+      "elapsed_seconds": 2.776523250000537,
+      "audio_seconds": 7.775,
+      "prompt_index": 1
+    },
+    {
+      "status": 200,
+      "elapsed_seconds": 5.946571137999854,
+      "audio_seconds": 13.675,
+      "prompt_index": 2
+    }
+  ]
+}
