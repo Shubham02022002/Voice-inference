@@ -1,7 +1,7 @@
-function wavBlob(chunks, sampleRate) {
+function wavBlob(chunks: Uint8Array<ArrayBuffer>[], sampleRate: number) {
   const dataLength = chunks.reduce((length, chunk) => length + chunk.byteLength, 0);
   const header = new DataView(new ArrayBuffer(44));
-  const writeTag = (offset, tag) => {
+  const writeTag = (offset: number, tag: string) => {
     for (let i = 0; i < tag.length; i++) header.setUint8(offset + i, tag.charCodeAt(i));
   };
   writeTag(0, "RIFF");
@@ -20,24 +20,30 @@ function wavBlob(chunks, sampleRate) {
   return new Blob([header.buffer, ...chunks], { type: "audio/wav" });
 }
 
-export async function playStream(body, context, signal, onPlaying) {
+export async function playStream(
+  body: ReadableStream<Uint8Array> | null,
+  context: AudioContext,
+  signal: AbortSignal,
+  onPlaying: () => void,
+) {
   if (!body) throw new Error("No audio stream was returned.");
 
-  const reader = body.pipeThrough(new TextDecoderStream()).getReader();
-  const chunks = [];
+  const reader = body.getReader();
+  const decoder = new TextDecoder();
+  const chunks: Uint8Array<ArrayBuffer>[] = [];
   let pending = "";
   let nextStart = 0;
-  let sampleRate;
+  let sampleRate: number | undefined;
   let finished = false;
-  let playbackFinished;
+  let playbackFinished: Promise<void> | undefined;
 
   try {
     while (!finished) {
       signal.throwIfAborted();
       const { value, done } = await reader.read();
       if (done) throw new Error("The audio stream ended early.");
-      pending += value;
-      let newline;
+      pending += decoder.decode(value, { stream: true });
+      let newline: number;
 
       while ((newline = pending.indexOf("\n")) !== -1 && !finished) {
         signal.throwIfAborted();
@@ -58,7 +64,7 @@ export async function playStream(body, context, signal, onPlaying) {
           const source = context.createBufferSource();
           source.buffer = buffer;
           source.connect(context.destination);
-          playbackFinished = new Promise((resolve) => {
+          playbackFinished = new Promise<void>((resolve) => {
             source.onended = () => {
               source.disconnect();
               resolve();
@@ -83,5 +89,6 @@ export async function playStream(body, context, signal, onPlaying) {
     reader.releaseLock();
   }
 
+  if (!sampleRate || !playbackFinished) throw new Error("The stream contained no playable audio.");
   return { audio: wavBlob(chunks, sampleRate), playbackFinished };
 }

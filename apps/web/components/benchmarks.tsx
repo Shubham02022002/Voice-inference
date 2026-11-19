@@ -1,6 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { SectionHeading } from "./ui";
+import { spring } from "../lib/motion";
+
+type Run = { concurrency: number; successes: number; failures: number; p50_seconds: number | null; p95_seconds: number | null; audio_seconds_per_wall_second: number };
+type Metric = { name: string; unit: string; before: number; after: number; better: "lower" | "higher" };
+type Report = { setup: string; notes?: string; metrics: Metric[] };
+type Result = { id: string; status: string; data?: Run[] | Report };
+type Selection = { selected: number; onSelect: (value: number) => void };
 
 const phases = [
   ["baseline", "CPU baseline", "Full-WAV responses from the first Kokoro worker.", "Request latency, success rate, and generated audio per second."],
@@ -14,13 +23,13 @@ const phases = [
 ];
 
 const baselineMetrics = [
-  { name: "P50 full-response latency", unit: " s", value: (run) => run.p50_seconds },
-  { name: "P95 full-response latency", unit: " s", value: (run) => run.p95_seconds },
-  { name: "Successful requests", unit: "%", value: (run) => 100 * run.successes / (run.successes + run.failures) },
-  { name: "Audio throughput", unit: " audio s/s", value: (run) => run.audio_seconds_per_wall_second },
+  { name: "P50 full-response latency", unit: " s", value: (run: Run) => run.p50_seconds },
+  { name: "P95 full-response latency", unit: " s", value: (run: Run) => run.p95_seconds },
+  { name: "Successful requests", unit: "%", value: (run: Run) => 100 * run.successes / (run.successes + run.failures) },
+  { name: "Audio throughput", unit: " audio s/s", value: (run: Run) => run.audio_seconds_per_wall_second },
 ];
 
-function Chart({ values, unit }) {
+function Chart({ values, unit }: { values: [string, number | null][]; unit: string }) {
   const max = Math.max(0, ...values.map(([, value]) => value ?? 0));
 
   return (
@@ -32,7 +41,7 @@ function Chart({ values, unit }) {
             <strong>{value == null ? "No data" : `${value.toFixed(2)}${unit}`}</strong>
           </div>
           <div className="track" aria-hidden="true">
-            <span className="bar" style={{ width: `${max ? ((value ?? 0) / max) * 100 : 0}%` }} />
+            <motion.span className="bar" initial={{ width: 0 }} animate={{ width: `${max ? ((value ?? 0) / max) * 100 : 0}%` }} transition={spring} />
           </div>
         </div>
       ))}
@@ -40,20 +49,20 @@ function Chart({ values, unit }) {
   );
 }
 
-function MetricPicker({ metrics, selected, onSelect }) {
+function MetricPicker({ metrics, selected, onSelect }: Selection & { metrics: { name: string }[] }) {
   return (
     <>
       <label htmlFor="benchmark-metric">Metric</label>
-      <select id="benchmark-metric" className="metric-control" value={selected} onChange={(event) => onSelect(Number(event.target.value))}>
+      <select id="benchmark-metric" className="field metric-control" value={selected} onChange={(event) => onSelect(Number(event.target.value))}>
         {metrics.map(({ name }, index) => <option key={index} value={index}>{name}</option>)}
       </select>
     </>
   );
 }
 
-function Baseline({ runs, selected, onSelect }) {
+function Baseline({ runs, selected, onSelect }: Selection & { runs: Run[] }) {
   const { value, unit } = baselineMetrics[selected];
-  const values = runs.map((run) => [
+  const values = runs.map<[string, number | null]>((run) => [
     `Concurrency ${run.concurrency} · ${run.successes}/${run.successes + run.failures} succeeded`, value(run),
   ]);
   return (
@@ -66,14 +75,14 @@ function Baseline({ runs, selected, onSelect }) {
   );
 }
 
-function validComparison(report) {
-  const valid = (value) => Number.isFinite(value) && value >= 0;
+function validComparison(report: Report) {
+  const valid = (value: number) => Number.isFinite(value) && value >= 0;
   return typeof report?.setup === "string" && Array.isArray(report.metrics) && report.metrics.length > 0 &&
     report.metrics.every((metric) => typeof metric?.name === "string" && typeof metric.unit === "string" &&
       valid(metric.before) && valid(metric.after) && ["lower", "higher"].includes(metric.better));
 }
 
-function Comparison({ report, selected, onSelect }) {
+function Comparison({ report, selected, onSelect }: Selection & { report: Report }) {
   const { before, after, unit, better } = report.metrics[selected];
   const change = after - before;
   const delta = before > 0 ? `${Math.abs(change / before * 100).toFixed(1)}%` : `${Math.abs(change).toFixed(2)}${unit}`;
@@ -93,7 +102,7 @@ function Comparison({ report, selected, onSelect }) {
 export default function Benchmarks() {
   const [phaseIndex, openPhase] = useState(0);
   const [selected, selectMetric] = useState(0);
-  const [report, setReport] = useState(null);
+  const [report, setReport] = useState<Result | null>(null);
   const [id, name, description, metrics] = phases[phaseIndex];
   const current = report?.id === id ? report : null;
 
@@ -125,11 +134,8 @@ export default function Benchmarks() {
   }, [id]);
 
   return (
-    <section id="benchmarks" aria-labelledby="benchmark-title">
-      <header className="section-heading">
-        <h2 id="benchmark-title">Inference benchmarks</h2>
-        <p>Track latency, capacity, and resource use as VoiceForge changes.</p>
-      </header>
+    <section id="benchmarks" aria-label="Inference benchmarks">
+      <SectionHeading title="Inference benchmarks" description="Track latency, capacity, and resource use as VoiceForge changes." />
       <div className="benchmark-layout">
         <nav className="panel phase-nav" aria-label="Benchmark phases">
           {phases.map(([phaseId, label], index) => (
@@ -147,7 +153,8 @@ export default function Benchmarks() {
             <span className="badge" role="status">{current?.status ?? "Loading"}</span>
           </div>
           <div id="measurements">
-            {current?.data && (id === "baseline"
+            {!current && <div className="skeleton" aria-label="Loading benchmark report" />}
+            {current?.data && (Array.isArray(current.data)
               ? <Baseline runs={current.data} selected={selected} onSelect={selectMetric} />
               : <Comparison report={current.data} selected={selected} onSelect={selectMetric} />)}
             {current?.status === "Awaiting data" && (
