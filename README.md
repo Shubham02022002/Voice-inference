@@ -70,13 +70,24 @@ npm ci
 npm start
 ```
 
+Start the Next.js app in a third terminal from the repository root:
+
+```sh
+cd apps/web
+npm ci
+npm run dev
+```
+
 Use Node.js 22 or newer and open [http://127.0.0.1:3000](http://127.0.0.1:3000).
 Enter text, choose a voice, and generate, play, or download the WAV.
 The gateway accepts `POST /v1/speech` and forwards requests to the worker's
 `POST /synthesize`. The worker loads the model once and accepts one active
 synthesis at a time. Concurrent requests that arrive while it is busy get HTTP 503.
-Both processes bind to loopback. To change ports, set `INFERENCE_PORT` for the
-worker and `PORT` and `INFERENCE_URL` as needed for the gateway.
+The worker runs on port 8000, the gateway on 3001, and Next.js on 3000.
+All three bind to loopback. To use a different gateway address, set
+`VOICEFORGE_API_URL` before starting Next.js. If building for production, set
+it before `npm run build` as well. The gateway uses `INFERENCE_URL` to locate
+the worker.
 
 ### Use the benchmark dashboard
 
@@ -108,8 +119,8 @@ planned metrics and an awaiting-data status.
 With both processes running, run from the repository root:
 
 ```sh
-python experiments/00_baseline/run.py --concurrency 1 --output /tmp/voiceforge-c1.json
-python experiments/00_baseline/run.py --concurrency 2 --output /tmp/voiceforge-c2.json
+python experiments/00_baseline/run.py --url http://127.0.0.1:3001/v1/speech --concurrency 1 --output /tmp/voiceforge-c1.json
+python experiments/00_baseline/run.py --url http://127.0.0.1:3001/v1/speech --concurrency 2 --output /tmp/voiceforge-c2.json
 ```
 
 Reports include each request's total latency, generated audio duration, and

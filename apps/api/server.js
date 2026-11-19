@@ -1,11 +1,10 @@
 import { readFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
-import { fileURLToPath } from "node:url";
 import express from "express";
 
 const app = express();
 const worker = process.env.INFERENCE_URL || "http://127.0.0.1:8000";
-const port = Number(process.env.PORT || 3000);
+const port = Number(process.env.PORT || 3001);
 
 app.use((request, response, next) => {
   request.id = randomUUID();
@@ -67,7 +66,6 @@ app.get("/v1/benchmarks/:phase", async (request, response) => {
   }
 });
 
-app.use(express.static(fileURLToPath(new URL("./public", import.meta.url))));
 app.use((request, response) => fail(request, response, 404, "Route not found."));
 app.use((error, request, response, next) => {
   if (response.headersSent) return next(error);
