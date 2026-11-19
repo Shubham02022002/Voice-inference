@@ -14,6 +14,7 @@ from time import perf_counter
 from typing import TYPE_CHECKING
 
 from .audio import encode_wav
+from .conditioning import DEFAULT_CACHE_BYTES, DEFAULT_TTL_SECONDS
 from .scheduler import QueueFull, QueueTimeout, RequestCancelled, Scheduler
 
 if TYPE_CHECKING:
@@ -55,6 +56,9 @@ class InferenceHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         if self.path == "/health":
             self.respond(200, "application/json", b'{"status":"ready"}')
+        elif self.path == "/conditioning-cache":
+            stats = self.server.adapter.conditioning_stats()
+            self.respond(200, "application/json", json.dumps(stats).encode())
         else:
             self.error_json(404, "Route not found.")
 
@@ -160,6 +164,8 @@ def main() -> None:
     parser.add_argument("--queue-limit", type=int, default=4, help="maximum requests waiting for inference")
     parser.add_argument("--queue-timeout", type=float, default=15, help="maximum seconds a request may wait")
     parser.add_argument("--queue-policy", choices=("fifo", "shortest"), default="fifo")
+    parser.add_argument("--conditioning-cache-bytes", type=int, default=DEFAULT_CACHE_BYTES)
+    parser.add_argument("--conditioning-cache-ttl", type=float, default=DEFAULT_TTL_SECONDS)
     args = parser.parse_args()
     try:
         scheduler = Scheduler(args.queue_limit, args.queue_timeout, args.queue_policy)
@@ -168,7 +174,14 @@ def main() -> None:
 
     from .models.kokoro import KokoroAdapter
 
-    with InferenceServer(args.port, KokoroAdapter(device=args.device), scheduler) as server:
+    try:
+        adapter = KokoroAdapter(
+            device=args.device, cache_bytes=args.conditioning_cache_bytes, cache_ttl=args.conditioning_cache_ttl,
+        )
+    except ValueError as error:
+        parser.error(str(error))
+
+    with InferenceServer(args.port, adapter, scheduler) as server:
         print(f"Inference worker ready on http://127.0.0.1:{server.server_port}", flush=True)
         try:
             server.serve_forever()

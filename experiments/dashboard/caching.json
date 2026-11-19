@@ -1,0 +1,217 @@
+{
+  "kind": "conditioning-cache",
+  "setup": "Kokoro 0.9.4, PyTorch 2.8.0+cpu, Linux x86_64, CPU, two Torch threads, one model instance, 8 rounds.",
+  "notes": "All measured trials returned byte-identical seeded PCM. The benchmark rotates the order of three cache modes. Cold reloads from local disk with networking disabled. First PCM is measured at the adapter and excludes HTTP, queueing and playback. Kokoro already caches host packs. CPU results do not measure CUDA transfer savings.",
+  "metrics": [
+    {
+      "name": "P50 first PCM vs. existing warm cache",
+      "unit": " ms",
+      "before": 666.6119795000327,
+      "after": 668.2583545000398,
+      "better": "lower"
+    },
+    {
+      "name": "P50 first PCM, managed cold vs. warm",
+      "unit": " ms",
+      "before": 641.4826135000169,
+      "after": 668.2583545000398,
+      "better": "lower"
+    }
+  ],
+  "prompt": "VoiceForge is ready. This test repeats the same voice and text.",
+  "voice_id": "af_heart",
+  "seed": 1876,
+  "pcm_matches": true,
+  "managed_warm": {
+    "hits": 8,
+    "misses": 1,
+    "evictions": 0,
+    "expirations": 0,
+    "bypasses": 0,
+    "entries": 1,
+    "resident_bytes": 522240,
+    "byte_limit": 4194304,
+    "ttl_seconds": 600.0
+  },
+  "managed_cold": {
+    "hits": 0,
+    "misses": 9,
+    "evictions": 0,
+    "expirations": 0,
+    "bypasses": 9,
+    "entries": 0,
+    "resident_bytes": 0,
+    "byte_limit": 0,
+    "ttl_seconds": 600.0
+  },
+  "modes": [
+    {
+      "id": "upstream_warm",
+      "label": "Kokoro warm",
+      "first_pcm_p50_ms": 666.6119795000327,
+      "total_p50_ms": 1615.6483909999793,
+      "trials": [
+        {
+          "first_pcm_ms": 636.3819750000062,
+          "total_ms": 1548.7027249999983,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 869.233759999986,
+          "total_ms": 1950.3024360000154,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 681.4310539999724,
+          "total_ms": 1632.4704979999751,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 799.4614489999776,
+          "total_ms": 1863.307863999978,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 633.5388819999253,
+          "total_ms": 1598.8262839999834,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 651.792905000093,
+          "total_ms": 1592.6941310000302,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 623.2033899999578,
+          "total_ms": 1542.4986079999599,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 1210.916574999942,
+          "total_ms": 2156.4925669999866,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        }
+      ]
+    },
+    {
+      "id": "managed_cold",
+      "label": "Managed cold",
+      "first_pcm_p50_ms": 641.4826135000169,
+      "total_p50_ms": 1569.5685259999834,
+      "trials": [
+        {
+          "first_pcm_ms": 691.1460199999624,
+          "total_ms": 1612.8090269999689,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 655.3824530000156,
+          "total_ms": 1578.0170099999964,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 900.0398830000336,
+          "total_ms": 1857.1143350000057,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 630.5886839999744,
+          "total_ms": 1599.181792999957,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 621.5198520000058,
+          "total_ms": 1561.1200419999705,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 652.3765430000594,
+          "total_ms": 1519.300033000036,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 613.7095880000061,
+          "total_ms": 1512.9526020000412,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 604.9561779999522,
+          "total_ms": 1500.2161329999808,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        }
+      ]
+    },
+    {
+      "id": "managed_warm",
+      "label": "Managed warm",
+      "first_pcm_p50_ms": 668.2583545000398,
+      "total_p50_ms": 1633.1522049999876,
+      "trials": [
+        {
+          "first_pcm_ms": 673.3370069999864,
+          "total_ms": 1619.5249419999982,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 679.6227199999976,
+          "total_ms": 1743.4917530000007,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 634.6032319999608,
+          "total_ms": 1590.1001889999975,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 752.3252160000311,
+          "total_ms": 1720.3092640000932,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 681.9920799999863,
+          "total_ms": 1646.779467999977,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 619.064619000028,
+          "total_ms": 1520.689331000085,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 624.5253959999673,
+          "total_ms": 1524.7470040000053,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        },
+        {
+          "first_pcm_ms": 663.1797020000931,
+          "total_ms": 1771.78351200007,
+          "audio_samples": 117000,
+          "sha256": "8d44cfed239e3365cdc9a6f455a797ee1742ceea425861e2026e71c9c83ed627"
+        }
+      ]
+    }
+  ]
+}

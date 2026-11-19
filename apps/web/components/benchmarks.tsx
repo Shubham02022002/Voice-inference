@@ -14,7 +14,9 @@ type Policy = {
   queue_p95_ms: number | null; inference_p50_ms: number | null; total_p95_ms: number | null;
   short_first_p50_ms: number | null;
 };
-type Report = { policies?: Policy[]; setup: string; notes?: string; metrics: Metric[]; variants?: { wav: PairRun[]; stream: PairRun[] } };
+type CacheMode = { label: string; first_pcm_p50_ms: number; total_p50_ms: number };
+type CacheStats = { hits: number; misses: number; resident_bytes: number; entries: number };
+type Report = { modes?: CacheMode[]; managed_warm?: CacheStats; policies?: Policy[]; setup: string; notes?: string; metrics: Metric[]; variants?: { wav: PairRun[]; stream: PairRun[] } };
 type Feasibility = {
   kind: "batching-feasibility";
   status: "unsupported" | "needs-validation";
@@ -149,6 +151,26 @@ function Scheduling({ report }: { report: Report }) {
   </>;
 }
 
+function Conditioning({ report }: { report: Report }) {
+  if (!report.modes?.length) return <Comparison report={report} />;
+  const stats = report.managed_warm;
+  const samples = report.modes.map((mode) => ({ label: mode.label, first: mode.first_pcm_p50_ms, total: mode.total_p50_ms }));
+  return <>
+    {stats && <Metrics values={[
+      { label: "Managed cache hits", value: number(stats.hits), detail: "Repeated voice requests" },
+      { label: "Managed cache misses", value: number(stats.misses), detail: "Includes the initial pack load" },
+      { label: "Resident conditioning", value: `${number(stats.resident_bytes / 1024)} KiB`, detail: `${stats.entries} cached voice pack(s)` },
+    ]} />}
+    <div className="benchmark-grid mt-4">
+      <BenchmarkChart title="Time to first PCM" description="Median time until the first audio chunk reaches the adapter." data={samples} unit=" ms"
+        series={[{ key: "first", label: "P50 first PCM", color: chartColors.accent }]} />
+      <BenchmarkChart title="Total synthesis time" description="Median time until all audio chunks are ready." data={samples} unit=" ms"
+        series={[{ key: "total", label: "P50 synthesis", color: chartColors.neutral }]} />
+    </div>
+    <ReportNotes report={report} />
+  </>;
+}
+
 function ReportNotes({ report }: { report: Report }) {
   return <div className="benchmark-note"><p>{report.setup}</p>{report.notes && <p>{report.notes}</p>}</div>;
 }
@@ -247,6 +269,7 @@ export default function Benchmarks() {
       : "kind" in current.data ? <Batching report={current.data} />
       : id === "streaming" ? <Streaming report={current.data} />
       : id === "queueing" ? <Scheduling report={current.data} />
+      : id === "caching" ? <Conditioning report={current.data} />
       : <Comparison report={current.data} />)}
   </section>;
 }
