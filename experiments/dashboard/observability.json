@@ -1,0 +1,48 @@
+{
+  "setup": "Tesla T4, FP32, af_heart. Four warmed rounds per policy and concurrency level.",
+  "notes": "Each chart spans the fastest (Before) to slowest (After) round by median time to first PCM. The ranges describe variation within one session on one prompt. Source: experiments/dashboard/chunkingload.json.",
+  "metrics": [
+    {
+      "name": "paragraph · 1 concurrent · fastest to slowest round",
+      "before": 385.46221100000366,
+      "after": 399.8138150000159,
+      "better": "lower",
+      "unit": " ms"
+    },
+    {
+      "name": "sentence · 1 concurrent · fastest to slowest round",
+      "before": 106.88263999998071,
+      "after": 112.04438600003641,
+      "better": "lower",
+      "unit": " ms"
+    },
+    {
+      "name": "paragraph · 2 concurrent · fastest to slowest round",
+      "before": 592.6756665000141,
+      "after": 630.3720779999935,
+      "better": "lower",
+      "unit": " ms"
+    },
+    {
+      "name": "sentence · 2 concurrent · fastest to slowest round",
+      "before": 388.93290900000466,
+      "after": 475.0351594999813,
+      "better": "lower",
+      "unit": " ms"
+    },
+    {
+      "name": "paragraph · 4 concurrent · fastest to slowest round",
+      "before": 1012.1977299999969,
+      "after": 1020.9801015000153,
+      "better": "lower",
+      "unit": " ms"
+    },
+    {
+      "name": "sentence · 4 concurrent · fastest to slowest round",
+      "before": 937.9321195000045,
+      "after": 1172.2682085000145,
+      "better": "lower",
+      "unit": " ms"
+    }
+  ]
+}
