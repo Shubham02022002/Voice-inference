@@ -41,6 +41,7 @@ const otherPhases = [
   ["caching", "Conditioning cache", "Cache hit rate, warm latency, and model memory."],
   ["precision", "GPU precision", "Peak VRAM, latency, throughput, and listening quality."],
   ["chunking", "Adaptive chunking", "Time to first playable payload and gaps between chunks."],
+  ["chunkingrepeat", "Chunking repeat", "First audio across three prompts in a fresh GPU session."],
   ["chunkingload", "Chunking under load", "Compare paragraph and sentence streaming at 1, 2, and 4 concurrent requests."],
   ["observability", "Reproducibility", "Variation across repeated trials and cost per audio minute."],
 ];
