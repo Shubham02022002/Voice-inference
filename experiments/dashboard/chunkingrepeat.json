@@ -1,0 +1,1843 @@
+{
+  "gpu": "Tesla T4",
+  "torch": "2.8.0+cu126",
+  "precision": "fp32",
+  "voice": "af_heart",
+  "runner_commit": "e86db91a5abd886aa0d02dd10441b850c07b9dbe",
+  "workloads": {
+    "control": {
+      "prompt": "Welcome to VoiceForge. The appointment is at 10:45 on November 19. Please write down the reference number, 7462, before we continue. When you are ready, listen for the pause between these two sentences.",
+      "bursts": [
+        {
+          "concurrency": 1,
+          "round": 1,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 394.32304199999635,
+              "total_ms": 399.4873039999902,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 37.610707147780516
+        },
+        {
+          "concurrency": 1,
+          "round": 1,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 110.02388999997947,
+              "total_ms": 549.9239399999851,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            }
+          ],
+          "audio_seconds_per_second": 28.2766376746581
+        },
+        {
+          "concurrency": 1,
+          "round": 2,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 111.5177469999935,
+              "total_ms": 572.0234539999751,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            }
+          ],
+          "audio_seconds_per_second": 27.18420003806466
+        },
+        {
+          "concurrency": 1,
+          "round": 2,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 384.7074720000023,
+              "total_ms": 389.69659599996476,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 38.55563572847159
+        },
+        {
+          "concurrency": 1,
+          "round": 3,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 386.26918300002444,
+              "total_ms": 390.8186550000323,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 38.44494065923941
+        },
+        {
+          "concurrency": 1,
+          "round": 3,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 114.229704999957,
+              "total_ms": 559.6143089999828,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            }
+          ],
+          "audio_seconds_per_second": 27.78699498908002
+        },
+        {
+          "concurrency": 1,
+          "round": 4,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 112.0722479999472,
+              "total_ms": 573.4928549999836,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            }
+          ],
+          "audio_seconds_per_second": 27.11454879416143
+        },
+        {
+          "concurrency": 1,
+          "round": 4,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 382.51107000002094,
+              "total_ms": 387.0510970000396,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 38.81916397203355
+        },
+        {
+          "concurrency": 2,
+          "round": 1,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 388.786,
+              "first_pcm_ms": 781.8953150000425,
+              "total_ms": 786.6126450000479,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 393.1502679999994,
+              "total_ms": 397.8928409999867,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 38.19338579425828
+        },
+        {
+          "concurrency": 2,
+          "round": 1,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 110.09828400000288,
+              "total_ms": 553.4610450000059,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 551.608,
+              "first_pcm_ms": 667.5405720000072,
+              "total_ms": 1108.305117000043,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            }
+          ],
+          "audio_seconds_per_second": 28.06086475913906
+        },
+        {
+          "concurrency": 2,
+          "round": 2,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 111.29849200000308,
+              "total_ms": 623.7188989999822,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 613.912,
+              "first_pcm_ms": 767.8383570000165,
+              "total_ms": 1308.4369999999694,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            }
+          ],
+          "audio_seconds_per_second": 23.76881729880822
+        },
+        {
+          "concurrency": 2,
+          "round": 2,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 417.78147300004775,
+              "total_ms": 430.290575000015,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 425.641,
+              "first_pcm_ms": 845.5976989999954,
+              "total_ms": 855.9048740000321,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 35.10904180223055
+        },
+        {
+          "concurrency": 2,
+          "round": 3,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 422.1306919999961,
+              "total_ms": 434.36432900000455,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 429.516,
+              "first_pcm_ms": 874.2379649999634,
+              "total_ms": 883.3436269999879,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 34.01847150021994
+        },
+        {
+          "concurrency": 2,
+          "round": 3,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 720.01,
+              "first_pcm_ms": 859.1311309999696,
+              "total_ms": 1314.6530469999789,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 150.0840319999952,
+              "total_ms": 729.1591369999537,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            }
+          ],
+          "audio_seconds_per_second": 23.64970235469464
+        },
+        {
+          "concurrency": 2,
+          "round": 4,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 111.05774099996779,
+              "total_ms": 564.6900119999714,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 562.803,
+              "first_pcm_ms": 675.9148670000172,
+              "total_ms": 1126.4309370000092,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            }
+          ],
+          "audio_seconds_per_second": 27.609326926715745
+        },
+        {
+          "concurrency": 2,
+          "round": 4,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 389.728,
+              "first_pcm_ms": 782.1352959999786,
+              "total_ms": 786.9842279999943,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 383.36811900001067,
+              "total_ms": 392.342541000005,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 38.16728311972906
+        },
+        {
+          "concurrency": 4,
+          "round": 1,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 1166.769,
+              "first_pcm_ms": 1565.8283540000184,
+              "total_ms": 1571.777800999996,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 380.872,
+              "first_pcm_ms": 782.9652240000087,
+              "total_ms": 787.7378839999665,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 776.718,
+              "first_pcm_ms": 1173.4375609999574,
+              "total_ms": 1178.3243239999592,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 388.3903419999797,
+              "total_ms": 393.1337450000001,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 38.23251266960811
+        },
+        {
+          "concurrency": 4,
+          "round": 1,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 1670.106,
+              "first_pcm_ms": 1787.6907219999794,
+              "total_ms": 2239.6161369999845,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 552.134,
+              "first_pcm_ms": 666.434492999997,
+              "total_ms": 1109.2042889999902,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 114.27508299999545,
+              "total_ms": 557.364715999995,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 1102.388,
+              "first_pcm_ms": 1233.291682000015,
+              "total_ms": 1677.7396950000139,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            }
+          ],
+          "audio_seconds_per_second": 27.762057512711042
+        },
+        {
+          "concurrency": 4,
+          "round": 2,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 561.84,
+              "first_pcm_ms": 679.5866080000224,
+              "total_ms": 1129.9565940000207,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 1127.408,
+              "first_pcm_ms": 1239.5218460000024,
+              "total_ms": 1843.8765949999834,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 1839.747,
+              "first_pcm_ms": 1957.6074369999787,
+              "total_ms": 2465.0829939999994,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 112.46094599999878,
+              "total_ms": 567.2564970000167,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            }
+          ],
+          "audio_seconds_per_second": 25.227465490808132
+        },
+        {
+          "concurrency": 4,
+          "round": 2,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 854.25,
+              "first_pcm_ms": 1267.8919300000189,
+              "total_ms": 1279.2736530000184,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 474.5009330000016,
+              "total_ms": 479.64094100001375,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 1251.436,
+              "first_pcm_ms": 1721.9107959999747,
+              "total_ms": 1730.8818909999673,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 455.237,
+              "first_pcm_ms": 875.011609000012,
+              "total_ms": 879.6964900000148,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 34.663702071523055
+        },
+        {
+          "concurrency": 4,
+          "round": 3,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 422.2563970000124,
+              "total_ms": 436.3812459999963,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 416.867,
+              "first_pcm_ms": 846.5111030000116,
+              "total_ms": 860.8887740000455,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 852.564,
+              "first_pcm_ms": 1290.0380330000303,
+              "total_ms": 1302.5993880000328,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 1282.812,
+              "first_pcm_ms": 1724.0426879999973,
+              "total_ms": 1734.1641699999855,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 34.65646507965881
+        },
+        {
+          "concurrency": 4,
+          "round": 3,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 136.92726499999708,
+              "total_ms": 688.45924499999,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 1351.985,
+              "first_pcm_ms": 1479.8971099999676,
+              "total_ms": 1933.0838019999987,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 686.176,
+              "first_pcm_ms": 832.28174300001,
+              "total_ms": 1359.5568640000124,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 1926.359,
+              "first_pcm_ms": 2040.9599810000145,
+              "total_ms": 2505.220256999962,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            }
+          ],
+          "audio_seconds_per_second": 24.82815625740046
+        },
+        {
+          "concurrency": 4,
+          "round": 4,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 561.449,
+              "first_pcm_ms": 677.8478290000294,
+              "total_ms": 1128.3195419999856,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 1685.02,
+              "first_pcm_ms": 1804.238249999969,
+              "total_ms": 2268.8881930000093,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 1125.38,
+              "first_pcm_ms": 1241.93599299997,
+              "total_ms": 1692.2879809999927,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 112.29800999996087,
+              "total_ms": 568.6709359999895,
+              "max_playback_gap_ms": 0,
+              "chunks": 4
+            }
+          ],
+          "audio_seconds_per_second": 27.405405110154913
+        },
+        {
+          "concurrency": 4,
+          "round": 4,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 1181.578,
+              "first_pcm_ms": 1582.3451280000427,
+              "total_ms": 1587.2301690000086,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 400.3251299999988,
+              "total_ms": 406.4539719999516,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 788.764,
+              "first_pcm_ms": 1189.8766820000333,
+              "total_ms": 1194.5185079999874,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 391.044,
+              "first_pcm_ms": 794.8065880000286,
+              "total_ms": 799.7303640000268,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 37.85191016931293
+        }
+      ]
+    },
+    "short": {
+      "prompt": "Your order is ready. Pick it up at gate five.",
+      "bursts": [
+        {
+          "concurrency": 1,
+          "round": 1,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 120.50587199996698,
+              "total_ms": 121.50824999997667,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 26.129912989452233
+        },
+        {
+          "concurrency": 1,
+          "round": 1,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 106.67592999999442,
+              "total_ms": 217.33087999996314,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            }
+          ],
+          "audio_seconds_per_second": 17.369827978429203
+        },
+        {
+          "concurrency": 1,
+          "round": 2,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 109.35136000000512,
+              "total_ms": 233.06133599999157,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            }
+          ],
+          "audio_seconds_per_second": 16.197452845632604
+        },
+        {
+          "concurrency": 1,
+          "round": 2,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 124.6595179999872,
+              "total_ms": 125.61601900000596,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 25.275438795746656
+        },
+        {
+          "concurrency": 1,
+          "round": 3,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 119.40605399996684,
+              "total_ms": 120.58375999998816,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 26.33024546589285
+        },
+        {
+          "concurrency": 1,
+          "round": 3,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 109.2962019999959,
+              "total_ms": 217.63341499996613,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            }
+          ],
+          "audio_seconds_per_second": 17.345681957895057
+        },
+        {
+          "concurrency": 1,
+          "round": 4,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 110.89326699999447,
+              "total_ms": 219.05163700000685,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            }
+          ],
+          "audio_seconds_per_second": 17.23337954328952
+        },
+        {
+          "concurrency": 1,
+          "round": 4,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 115.63061799995467,
+              "total_ms": 116.63569899997128,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 27.221511314479983
+        },
+        {
+          "concurrency": 2,
+          "round": 1,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 113.829,
+              "first_pcm_ms": 251.67696099998693,
+              "total_ms": 252.7385639999693,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 117.25412099997357,
+              "total_ms": 118.53007100000923,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 25.1036328368458
+        },
+        {
+          "concurrency": 2,
+          "round": 1,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 107.12673899996616,
+              "total_ms": 215.75825899998335,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 211.752,
+              "first_pcm_ms": 321.3100030000078,
+              "total_ms": 432.01329900000474,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            }
+          ],
+          "audio_seconds_per_second": 17.47631384838437
+        },
+        {
+          "concurrency": 2,
+          "round": 2,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 107.25224800000888,
+              "total_ms": 221.48523599997816,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 219.55,
+              "first_pcm_ms": 327.9609960000016,
+              "total_ms": 435.6708369999751,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            }
+          ],
+          "audio_seconds_per_second": 17.329596931456834
+        },
+        {
+          "concurrency": 2,
+          "round": 2,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 129.926,
+              "first_pcm_ms": 254.6240629999943,
+              "total_ms": 255.71718100002272,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 135.8170350000023,
+              "total_ms": 136.89147200000207,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 24.81352256794801
+        },
+        {
+          "concurrency": 2,
+          "round": 3,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 122.14335800001663,
+              "total_ms": 123.47393300001386,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 117.466,
+              "first_pcm_ms": 243.48938299999645,
+              "total_ms": 244.57749300000842,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 25.963141260916355
+        },
+        {
+          "concurrency": 2,
+          "round": 3,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 113.98808899997448,
+              "total_ms": 222.49070599997367,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 220.49,
+              "first_pcm_ms": 327.8208400000153,
+              "total_ms": 439.00634900001023,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            }
+          ],
+          "audio_seconds_per_second": 17.197928952958772
+        },
+        {
+          "concurrency": 2,
+          "round": 4,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 109.78007099998877,
+              "total_ms": 233.6463689999846,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 228.797,
+              "first_pcm_ms": 341.7395539999575,
+              "total_ms": 451.80959399999665,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            }
+          ],
+          "audio_seconds_per_second": 16.710579191463687
+        },
+        {
+          "concurrency": 2,
+          "round": 4,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 115.795,
+              "first_pcm_ms": 282.46637200004443,
+              "total_ms": 284.98648800001547,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 118.48315600002479,
+              "total_ms": 119.64191900000287,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 22.267745520586082
+        },
+        {
+          "concurrency": 4,
+          "round": 1,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 326.523,
+              "first_pcm_ms": 491.2182819999771,
+              "total_ms": 495.4787489999717,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 166.509,
+              "first_pcm_ms": 327.469643000029,
+              "total_ms": 332.2246390000032,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 490.087,
+              "first_pcm_ms": 654.259063999973,
+              "total_ms": 656.983825999987,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 167.5202380000087,
+              "total_ms": 169.3412090000379,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 19.303929838708708
+        },
+        {
+          "concurrency": 4,
+          "round": 1,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 552.054,
+              "first_pcm_ms": 691.5345170000364,
+              "total_ms": 825.7674730000417,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 143.05130100001406,
+              "total_ms": 287.3964589999787,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 284.452,
+              "first_pcm_ms": 419.6999039999696,
+              "total_ms": 558.8800759999799,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 818.941,
+              "first_pcm_ms": 988.5182429999873,
+              "total_ms": 1123.9051119999885,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            }
+          ],
+          "audio_seconds_per_second": 13.435297907960893
+        },
+        {
+          "concurrency": 4,
+          "round": 2,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 142.03611499999624,
+              "total_ms": 280.47242899998537,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 546.867,
+              "first_pcm_ms": 691.5804230000049,
+              "total_ms": 843.257656999981,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 273.855,
+              "first_pcm_ms": 412.7291780000064,
+              "total_ms": 554.077512000049,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 834.079,
+              "first_pcm_ms": 995.8263670000065,
+              "total_ms": 1137.9676859999677,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            }
+          ],
+          "audio_seconds_per_second": 13.269269580999708
+        },
+        {
+          "concurrency": 4,
+          "round": 2,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 337.372,
+              "first_pcm_ms": 467.11058500000036,
+              "total_ms": 468.30838199997515,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 462.422,
+              "first_pcm_ms": 586.872120999999,
+              "total_ms": 587.8379870000003,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 166.886,
+              "first_pcm_ms": 338.8765639999747,
+              "total_ms": 343.55020399999603,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 167.71677499997395,
+              "total_ms": 171.22425099995553,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 21.58809627747756
+        },
+        {
+          "concurrency": 4,
+          "round": 3,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 116.722,
+              "first_pcm_ms": 238.19684400001506,
+              "total_ms": 241.28490200001806,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 120.36699100002579,
+              "total_ms": 121.4224800000352,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 355.151,
+              "first_pcm_ms": 482.7061550000167,
+              "total_ms": 483.72426899999255,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 236.482,
+              "first_pcm_ms": 363.38608699998076,
+              "total_ms": 364.64879699997255,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 26.202301745117442
+        },
+        {
+          "concurrency": 4,
+          "round": 3,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 431.293,
+              "first_pcm_ms": 546.9250550000311,
+              "total_ms": 656.8343659999982,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 211.882,
+              "first_pcm_ms": 323.52665000001934,
+              "total_ms": 438.0241829999818,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 108.31417600002169,
+              "total_ms": 218.0653380000308,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 650.989,
+              "first_pcm_ms": 762.9570319999743,
+              "total_ms": 883.144093999988,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            }
+          ],
+          "audio_seconds_per_second": 17.098002582577656
+        },
+        {
+          "concurrency": 4,
+          "round": 4,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 651.93,
+              "first_pcm_ms": 763.8650570000323,
+              "total_ms": 871.95071900004,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 434.264,
+              "first_pcm_ms": 547.1315300000015,
+              "total_ms": 657.3722750000002,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 213.96,
+              "first_pcm_ms": 329.982020999978,
+              "total_ms": 441.70700299997634,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 110.98526600000014,
+              "total_ms": 220.98114400000668,
+              "max_playback_gap_ms": 0,
+              "chunks": 2
+            }
+          ],
+          "audio_seconds_per_second": 17.29864876050143
+        },
+        {
+          "concurrency": 4,
+          "round": 4,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 259.54,
+              "first_pcm_ms": 380.88930200001414,
+              "total_ms": 381.9031589999895,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 375.471,
+              "first_pcm_ms": 503.8748800000121,
+              "total_ms": 504.9080839999647,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 142.16039899997668,
+              "total_ms": 143.28443699997706,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 138.061,
+              "first_pcm_ms": 261.7108450000387,
+              "total_ms": 262.8061629999934,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 25.12755319782023
+        }
+      ]
+    },
+    "narration": {
+      "prompt": "When the rain finally stopped, the crew walked down the platform and waited for the evening train. A few minutes later, the station lights came on. Beyond the tracks, the last patch of sunlight disappeared behind the hills.",
+      "bursts": [
+        {
+          "concurrency": 1,
+          "round": 1,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 355.49641800002973,
+              "total_ms": 359.94758100002855,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 36.9498246468253
+        },
+        {
+          "concurrency": 1,
+          "round": 1,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 182.87269299997888,
+              "total_ms": 459.6345690000021,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            }
+          ],
+          "audio_seconds_per_second": 30.023851404440247
+        },
+        {
+          "concurrency": 1,
+          "round": 2,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 182.96187999999347,
+              "total_ms": 462.8177679999794,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            }
+          ],
+          "audio_seconds_per_second": 29.817351351127503
+        },
+        {
+          "concurrency": 1,
+          "round": 2,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 374.2948539999702,
+              "total_ms": 378.32151099996736,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 35.15528357043686
+        },
+        {
+          "concurrency": 1,
+          "round": 3,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 358.5772229999975,
+              "total_ms": 362.6667520000524,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 36.67278548875106
+        },
+        {
+          "concurrency": 1,
+          "round": 3,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 181.04402599999503,
+              "total_ms": 478.2573030000208,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            }
+          ],
+          "audio_seconds_per_second": 28.854760634986896
+        },
+        {
+          "concurrency": 1,
+          "round": 4,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 179.24832200003493,
+              "total_ms": 462.8296250000403,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            }
+          ],
+          "audio_seconds_per_second": 29.816587475356183
+        },
+        {
+          "concurrency": 1,
+          "round": 4,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 354.71070899995993,
+              "total_ms": 359.48204599998235,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 36.99767526081303
+        },
+        {
+          "concurrency": 2,
+          "round": 1,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 371.5875689999848,
+              "total_ms": 375.85841399999254,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 367.101,
+              "first_pcm_ms": 732.689981999954,
+              "total_ms": 737.034145999985,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 36.09059382711496
+        },
+        {
+          "concurrency": 2,
+          "round": 1,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 464.104,
+              "first_pcm_ms": 647.4601790000065,
+              "total_ms": 929.274702999976,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 182.40810599996848,
+              "total_ms": 467.5719599999866,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            }
+          ],
+          "audio_seconds_per_second": 29.679088787627467
+        },
+        {
+          "concurrency": 2,
+          "round": 2,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 467.679,
+              "first_pcm_ms": 669.332546000021,
+              "total_ms": 1027.184616999989,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 183.2867550000401,
+              "total_ms": 476.2665670000388,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            }
+          ],
+          "audio_seconds_per_second": 26.86480033141582
+        },
+        {
+          "concurrency": 2,
+          "round": 2,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 384.188,
+              "first_pcm_ms": 800.3897439999719,
+              "total_ms": 809.5944439999698,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 390.4324060000022,
+              "total_ms": 402.12973100000227,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 32.8405204989417
+        },
+        {
+          "concurrency": 2,
+          "round": 3,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 395.26254700001573,
+              "total_ms": 406.1488840000038,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 401.145,
+              "first_pcm_ms": 791.8083160000151,
+              "total_ms": 800.2954090000003,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 33.23772659553017
+        },
+        {
+          "concurrency": 2,
+          "round": 3,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 207.1412870000131,
+              "total_ms": 548.5279080000396,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 544.442,
+              "first_pcm_ms": 754.4243850000498,
+              "total_ms": 1108.6667780000425,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            }
+          ],
+          "audio_seconds_per_second": 24.894765990723087
+        },
+        {
+          "concurrency": 2,
+          "round": 4,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 224.80392700003904,
+              "total_ms": 556.5284259999999,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 552.985,
+              "first_pcm_ms": 733.3461750000083,
+              "total_ms": 1010.2949399999943,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            }
+          ],
+          "audio_seconds_per_second": 27.318755055825733
+        },
+        {
+          "concurrency": 2,
+          "round": 4,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 375.81404300004806,
+              "total_ms": 379.78188700003557,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 369.902,
+              "first_pcm_ms": 735.6921140000168,
+              "total_ms": 739.7277690000124,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 35.95917459737753
+        },
+        {
+          "concurrency": 4,
+          "round": 1,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 719.019,
+              "first_pcm_ms": 1087.8368680000108,
+              "total_ms": 1092.2713229999772,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 354.565,
+              "first_pcm_ms": 725.6263959999956,
+              "total_ms": 730.0052100000016,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 1080.601,
+              "first_pcm_ms": 1450.233663000006,
+              "total_ms": 1459.1132570000127,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 362.665284000002,
+              "total_ms": 367.0633950000024,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 36.4481500569128
+        },
+        {
+          "concurrency": 4,
+          "round": 1,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 572.473,
+              "first_pcm_ms": 789.034786000002,
+              "total_ms": 1117.8377499999783,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 1108.286,
+              "first_pcm_ms": 1294.9348779999923,
+              "total_ms": 1573.2635780000237,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 1566.16,
+              "first_pcm_ms": 1754.0072790000067,
+              "total_ms": 2036.2670000000094,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 221.86348700000735,
+              "total_ms": 581.798114000037,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            }
+          ],
+          "audio_seconds_per_second": 27.103809342691914
+        },
+        {
+          "concurrency": 4,
+          "round": 2,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 460.503,
+              "first_pcm_ms": 649.2930569999658,
+              "total_ms": 934.5491290000041,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 931.025,
+              "first_pcm_ms": 1127.8345730000296,
+              "total_ms": 1414.6042010000315,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 1407.47,
+              "first_pcm_ms": 1594.4736419999685,
+              "total_ms": 1876.6086539999947,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 181.80964500004393,
+              "total_ms": 466.67274400005,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            }
+          ],
+          "audio_seconds_per_second": 29.401255464606855
+        },
+        {
+          "concurrency": 4,
+          "round": 2,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 730.146,
+              "first_pcm_ms": 1100.264208999988,
+              "total_ms": 1104.3995200000154,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 367.24009799996793,
+              "total_ms": 371.5593999999669,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 361.505,
+              "first_pcm_ms": 737.2170840000081,
+              "total_ms": 741.356106000012,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 1091.87,
+              "first_pcm_ms": 1466.758795999965,
+              "total_ms": 1471.7247999999472,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 36.148062463853236
+        },
+        {
+          "concurrency": 4,
+          "round": 3,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 361.3092349999647,
+              "total_ms": 366.8329349999908,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 1102.918,
+              "first_pcm_ms": 1466.8620099999998,
+              "total_ms": 1470.9695820000093,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 719.204,
+              "first_pcm_ms": 1102.6024739999798,
+              "total_ms": 1106.7690040000002,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 354.01,
+              "first_pcm_ms": 725.454491999983,
+              "total_ms": 729.837740999983,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 36.14883330010887
+        },
+        {
+          "concurrency": 4,
+          "round": 3,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 1612.817,
+              "first_pcm_ms": 1819.0614040000241,
+              "total_ms": 2160.633873999984,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 1060.64,
+              "first_pcm_ms": 1273.7717690000068,
+              "total_ms": 1619.7939329999826,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 184.63341000000355,
+              "total_ms": 511.28944200002024,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 504.471,
+              "first_pcm_ms": 723.3085610000103,
+              "total_ms": 1067.4456200000009,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            }
+          ],
+          "audio_seconds_per_second": 25.52964406602158
+        },
+        {
+          "concurrency": 4,
+          "round": 4,
+          "policy": "sentence",
+          "requests": [
+            {
+              "queue_ms": 1123.537,
+              "first_pcm_ms": 1334.0618030000542,
+              "total_ms": 1695.1931450000188,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 210.3926450000131,
+              "total_ms": 566.4440599999807,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 560.671,
+              "first_pcm_ms": 772.1912470000234,
+              "total_ms": 1126.1469099999886,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            },
+            {
+              "queue_ms": 1691.582,
+              "first_pcm_ms": 1880.577207999977,
+              "total_ms": 2162.8008220000083,
+              "max_playback_gap_ms": 0,
+              "chunks": 3
+            }
+          ],
+          "audio_seconds_per_second": 25.522461170952795
+        },
+        {
+          "concurrency": 4,
+          "round": 4,
+          "policy": "paragraph",
+          "requests": [
+            {
+              "queue_ms": 1082.111,
+              "first_pcm_ms": 1454.780984000024,
+              "total_ms": 1458.9932900000235,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 359.184,
+              "first_pcm_ms": 723.5636909999812,
+              "total_ms": 727.7852409999923,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 724.525,
+              "first_pcm_ms": 1087.792697999987,
+              "total_ms": 1091.8715639999732,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            },
+            {
+              "queue_ms": 0,
+              "first_pcm_ms": 365.4773119999959,
+              "total_ms": 369.6214899999859,
+              "max_playback_gap_ms": 0,
+              "chunks": 1
+            }
+          ],
+          "audio_seconds_per_second": 36.447605368348476
+        }
+      ]
+    }
+  },
+  "metrics": [
+    {
+      "name": "control · 1 concurrent · median first audio",
+      "before": 385.4883275000134,
+      "after": 111.79499749997035,
+      "unit": " ms",
+      "better": "lower"
+    },
+    {
+      "name": "control · 2 concurrent · median first audio",
+      "before": 602.0130035000193,
+      "after": 408.8123020000012,
+      "unit": " ms",
+      "better": "lower"
+    },
+    {
+      "name": "control · 4 concurrent · median first audio",
+      "before": 1024.2245849999847,
+      "after": 1032.7867125000125,
+      "unit": " ms",
+      "better": "lower"
+    },
+    {
+      "name": "short · 1 concurrent · median first audio",
+      "before": 119.95596299996691,
+      "after": 109.32378100000051,
+      "unit": " ms",
+      "better": "lower"
+    },
+    {
+      "name": "short · 2 concurrent · median first audio",
+      "before": 189.65320899999938,
+      "after": 217.64904599999113,
+      "unit": " ms",
+      "better": "lower"
+    },
+    {
+      "name": "short · 4 concurrent · median first audio",
+      "before": 351.1313254999777,
+      "after": 483.31247950000034,
+      "unit": " ms",
+      "better": "lower"
+    },
+    {
+      "name": "narration · 1 concurrent · median first audio",
+      "before": 357.0368205000136,
+      "after": 181.95835949998695,
+      "unit": " ms",
+      "better": "lower"
+    },
+    {
+      "name": "narration · 2 concurrent · median first audio",
+      "before": 563.9762644999848,
+      "after": 436.1320530000228,
+      "unit": " ms",
+      "better": "lower"
+    },
+    {
+      "name": "narration · 4 concurrent · median first audio",
+      "before": 912.5048909999975,
+      "after": 958.4346795000158,
+      "unit": " ms",
+      "better": "lower"
+    }
+  ],
+  "setup": "Fresh Tesla T4 session, FP32, af_heart. Four warmed bursts per prompt, policy and concurrency level.",
+  "notes": "Bars compare request-level median time to first PCM over loopback HTTP, including queue wait. The control repeats the previous prompt. Short and narration are additional workloads."
+}
