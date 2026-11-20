@@ -7,6 +7,10 @@ import express from "express";
 const app = express();
 const worker = process.env.INFERENCE_URL || "http://127.0.0.1:8000";
 const port = Number(process.env.PORT || 3001);
+const omniTimeoutMs = Number(process.env.VLLM_OMNI_TIMEOUT_MS ?? 60_000);
+if (!Number.isSafeInteger(omniTimeoutMs) || omniTimeoutMs < 1 || omniTimeoutMs > 600_000) {
+  throw new Error("VLLM_OMNI_TIMEOUT_MS must be an integer between 1 and 600000.");
+}
 
 app.use((request, response, next) => {
   request.id = randomUUID();
@@ -33,7 +37,7 @@ app.post(["/v1/speech", "/v1/speech/stream"], async (request, response) => {
   }
 
   const stream = /\/stream\/?$/i.test(request.path);
-  const timeout = AbortSignal.timeout(60_000);
+  const timeout = AbortSignal.timeout(omni ? omniTimeoutMs : 60_000);
   const disconnected = new AbortController();
   response.on("close", () => {
     if (!response.writableFinished) disconnected.abort();
